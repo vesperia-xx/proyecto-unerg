@@ -1,0 +1,84 @@
+'use client'
+import React, { useState } from "react";
+import PageTemplate from "@/components/PageTemplate";
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import DeleteIcon from '@mui/icons-material/Delete';
+
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Button from '@mui/material/Button';
+import TableStyled from "@/components/TableStyled";
+
+const PasantiasDocsAdd = () => {
+  const [uploadedDocuments, setUploadedDocuments] = useState([]);
+
+  const handleFileUpload = (event) => {
+    const files = event.target.files;
+    let newDocuments = [];
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      newDocuments.push({ id: uploadedDocuments.length + 1, name: file.name });
+    }
+    setUploadedDocuments([...uploadedDocuments, ...newDocuments]);
+  };
+
+  const handleDeleteDocument = (id) => {
+    const updatedDocuments = uploadedDocuments.filter(doc => doc.id !== id);
+    setUploadedDocuments(updatedDocuments);
+  };
+
+  return (
+    <PageTemplate>
+      <div style={{ padding: '20px'}}>
+        <input
+          accept=".pdf"
+          style={{ display: 'none' }}
+          id="upload-button"
+          multiple
+          type="file"
+          onChange={handleFileUpload}
+        />
+        <label htmlFor="upload-button">
+          <Button color="primary" variant="contained" component="span" startIcon={<CloudUploadIcon />}>
+            Subir Documentos
+          </Button>
+        </label>
+      </div>
+      <TableStyled>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell>#</TableCell>
+              <TableCell>Documento</TableCell>
+              <TableCell>Acciones</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {uploadedDocuments.map((doc, index) => (
+              <TableRow key={doc.id}>
+                <TableCell>{index + 1}</TableCell>
+                <TableCell>{doc.name}</TableCell>
+                <TableCell>
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    style={{ color: '#EB5757' }}
+                    startIcon={<DeleteIcon />}
+                    onClick={() => handleDeleteDocument(doc.id)}
+                  >
+                    Borrar
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableStyled>
+    </PageTemplate>
+  );
+};
+
+export default PasantiasDocsAdd;

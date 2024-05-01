@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit"
-import { studentSlice } from "./users/studentSlice"
+import { studentSlice } from "./slices/studentSlice"
 
 
 
