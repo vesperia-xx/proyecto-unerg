@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -17,7 +16,7 @@ const style = {
   p: 4,
 };
 
-const BasicModal = ({ open, onClose, onAddActivity }) => {
+const ModalActivityPasantias = ({ open, onClose, onAddActivity, onEditActivity, editedActivity }) => {
   const [activityData, setActivityData] = useState({
     activity: '',
     startDate: '',
@@ -25,14 +24,42 @@ const BasicModal = ({ open, onClose, onAddActivity }) => {
     hours: ''
   });
 
+  useEffect(() => {
+    if (editedActivity) {
+      setActivityData({
+        activity: editedActivity.activity || '',
+        startDate: editedActivity.startDate || '',
+        endDate: editedActivity.endDate || '',
+        hours: editedActivity.hours || ''
+      });
+    } else {
+      setActivityData({
+        activity: '',
+        startDate: '',
+        endDate: '',
+        hours: ''
+      });
+    }
+  }, [editedActivity]);
+
   const handleChange = (event) => {
     const { name, value } = event.target;
-    setActivityData({ ...activityData, [name]: value });
+    const numericValue = name === 'hours' && !isNaN(value) ? parseInt(value, 10) : value;
+    setActivityData({ ...activityData, [name]: numericValue });
   };
 
-  const handleAddActivity = () => {
-    onAddActivity(activityData);
-    onClose();
+
+  const handleAction = () => {
+    if (activityData.activity && activityData.startDate && activityData.endDate && activityData.hours) {
+      if (editedActivity) {
+        onEditActivity({ ...editedActivity, ...activityData });
+      } else {
+        onAddActivity({ ...activityData, id: Date.now().toString() }); 
+      }
+      onClose();
+    } else {
+      alert('Por favor complete todos los campos.');
+    }
   };
 
   return (
@@ -43,7 +70,6 @@ const BasicModal = ({ open, onClose, onAddActivity }) => {
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        <Typography variant="h5">Agregar nueva actividad</Typography>
         <form>
           <TextField
             style={{ width: "200px", margin: "5px" }}
@@ -53,6 +79,7 @@ const BasicModal = ({ open, onClose, onAddActivity }) => {
             variant="outlined"
             value={activityData.activity}
             onChange={handleChange}
+            required
           />
           <br />
           <TextField
@@ -63,6 +90,7 @@ const BasicModal = ({ open, onClose, onAddActivity }) => {
             variant="outlined"
             value={activityData.startDate}
             onChange={handleChange}
+            required
           />
           <br />
           <TextField
@@ -73,6 +101,7 @@ const BasicModal = ({ open, onClose, onAddActivity }) => {
             variant="outlined"
             value={activityData.endDate}
             onChange={handleChange}
+            required
           />
           <br />
           <TextField
@@ -83,15 +112,16 @@ const BasicModal = ({ open, onClose, onAddActivity }) => {
             variant="outlined"
             value={activityData.hours}
             onChange={handleChange}
+            required
           />
           <br />
-          <Button variant="contained" color="primary" onClick={handleAddActivity}>
-            Guardar
+          <Button variant="contained" color="primary" onClick={handleAction}>
+            {editedActivity ? 'Editar' : 'Guardar'}
           </Button>
         </form>
       </Box>
     </Modal>
   );
-}
+};
 
-export default BasicModal;
+export default ModalActivityPasantias;

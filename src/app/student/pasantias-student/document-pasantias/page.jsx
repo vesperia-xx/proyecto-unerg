@@ -12,10 +12,10 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TableStyled from "@/components/TableStyled";
 
-const documents = [
-  { id: 1, name: 'Document 1', url: '/path/to/document1.pdf' },
-  { id: 2, name: 'Document 2', url: '/path/to/document2.pdf' },
-  { id: 3, name: 'Document 3', url: '/path/to/document3.pdf' },
+const documentPasantias = [
+  { id: 1, name: 'Documento 1', url: '/path/to/document1.pdf' },
+  { id: 2, name: 'Documento 2', url: '/path/to/document2.pdf' },
+  { id: 3, name: 'Documento 3', url: '/path/to/document3.pdf' },
 ];
 
 const pasantiasDocument = () => {
@@ -37,7 +37,7 @@ const pasantiasDocument = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {documents.map((doc, index) => (
+            {documentPasantias.map((doc, index) => (
               <TableRow key={doc.id}>
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{doc.name}</TableCell>

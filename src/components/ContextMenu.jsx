@@ -4,7 +4,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const ContextMenu = ({ onDelete, onEdit }) => {
+const ContextMenu = ({ onDelete, onEdit, canDownload, studentStatus }) => {
     const [anchorEl, setAnchorEl] = useState(null);
 
     const handleClick = (event) => {
@@ -50,14 +50,15 @@ const ContextMenu = ({ onDelete, onEdit }) => {
                     horizontal: 'left',
                 }}
             >
-                <MenuItem onClick={handleEditClick}>
+                <MenuItem onClick={handleEditClick} disabled={studentStatus === 'Completado' || canDownload}>
                     <EditIcon sx={{ color: '#4079ED', marginRight: 1 }} />
                     Editar
                 </MenuItem>
-                <MenuItem onClick={handleDeleteClick}>
+                <MenuItem onClick={handleDeleteClick} disabled={studentStatus === 'Completado' || canDownload}>
                     <DeleteIcon sx={{ color: '#EB5757', marginRight: 1 }} />
                     Borrar
                 </MenuItem>
+
             </Menu>
         </div>
     );
