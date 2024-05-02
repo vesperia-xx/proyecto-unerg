@@ -1,16 +1,11 @@
 'use client'
 import React, { useState } from "react";
-import PageTemplate from "@/components/PageTemplate";
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import DeleteIcon from '@mui/icons-material/Delete';
 
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Button from '@mui/material/Button';
+import { CloudUpload as CloudUploadIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import { Table, TableBody, TableCell, TableHead, TableRow, Button } from '@mui/material';
+
 import TableStyled from "@/components/TableStyled";
+import PageTemplate from "@/components/PageTemplate";
 
 const PasantiasDocsAdd = () => {
   const [uploadedDocuments, setUploadedDocuments] = useState([]);

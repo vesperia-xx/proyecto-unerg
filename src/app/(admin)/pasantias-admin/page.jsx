@@ -1,26 +1,30 @@
 'use client';
+
 import React from "react";
+
 import { Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
+
 import PageTemplate from "@/components/PageTemplate";
 import TableStyled from "@/components/TableStyled";
 
 const PasantiasEstudiantes = () => {
-  const students = [
-    {
-      id: 1,
-      name: 'Ricardo',
-      lastname: 'Aguilera',
-      ci: '12896748',
-      phoneNumber: '123-456-7890',
-      title: 'Título 1',
-      empresa: 'Empresa A',
-      tutorPasantias: 'Profesor X',
-      tutorEmpresarial: 'Ana',
-      hour: '4',
-      status: 'en progreso',
-      email: 'ricardo@example.com'
-    }
-  ];
+  const studentData = {
+    id: 1,
+    name: 'Ricardo',
+    lastname: 'Aguilera',
+    ci: '12896748',
+    phoneNumber: '123-456-7890',
+    email: 'ricardo@example.com'
+  };
+
+  const pasantiasData = {
+    title: 'Título 1',
+    empresa: 'Empresa A',
+    tutorPasantias: 'Profesor X',
+    tutorEmpresarial: 'Ana',
+    hour: '4',
+    status: 'en progreso'
+  };
 
   return (
     <PageTemplate>
@@ -41,23 +45,20 @@ const PasantiasEstudiantes = () => {
               <TableCell>Estatus</TableCell>
             </TableRow>
           </TableHead>
-
           <TableBody>
-            {students.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell>{row.id}</TableCell>
-                <TableCell>{`${row.name} ${row.lastname}`}</TableCell>
-                <TableCell>{row.ci}</TableCell>
-                <TableCell>{row.email}</TableCell>
-                <TableCell>{row.phoneNumber}</TableCell>
-                <TableCell>{row.title}</TableCell>
-                <TableCell>{row.empresa}</TableCell>
-                <TableCell>{row.tutorPasantias}</TableCell>
-                <TableCell>{row.tutorEmpresarial}</TableCell>
-                <TableCell>{row.hour}</TableCell>
-                <TableCell>{row.status}</TableCell>
-              </TableRow>
-            ))}
+            <TableRow>
+              <TableCell>1</TableCell>
+              <TableCell>{`${studentData.name} ${studentData.lastname}`}</TableCell>
+              <TableCell>{studentData.ci}</TableCell>
+              <TableCell>{studentData.email}</TableCell>
+              <TableCell>{studentData.phoneNumber}</TableCell>
+              <TableCell>{pasantiasData.title}</TableCell>
+              <TableCell>{pasantiasData.empresa}</TableCell>
+              <TableCell>{pasantiasData.tutorPasantias}</TableCell>
+              <TableCell>{pasantiasData.tutorEmpresarial}</TableCell>
+              <TableCell>{pasantiasData.hour}</TableCell>
+              <TableCell>{pasantiasData.status}</TableCell>
+            </TableRow>
           </TableBody>
         </Table>
       </TableStyled>

@@ -1,24 +1,16 @@
 'use client';
+
 import React, { useState, useEffect } from "react";
 import PageTemplate from "@/components/PageTemplate";
 import CustomBox from "@/components/CustomBox";
 import TitleValue from "@/components/TitleValue";
-import TableStyled from "@/components/TableStyled";
-import ModalActivityServicio from '@/components/ModalActivityServicio';
+import ModalActivityServicio from "@/components/ModalActivityServicio";
 import ContextMenu from "@/components/ContextMenu";
 
-import AddIcon from '@mui/icons-material/Add';
-import GetAppIcon from '@mui/icons-material/GetApp';
-
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
+import { Add as AddIcon, GetApp as GetAppIcon } from '@mui/icons-material';
+import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { Grid, Typography, Button } from '@mui/material';
+import TableStyled from "@/components/TableStyled";
 
 // import { generarCartaCulminacionPDF } from './utils/pdfGenerator';
 
