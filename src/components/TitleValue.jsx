@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
 
-const TitleValue = ({ title, value, valueToRender }) => {
+const TitleValue = ({ title, value, strong }) => {
   return (
     <Box
       sx={{
@@ -22,10 +22,11 @@ const TitleValue = ({ title, value, valueToRender }) => {
         {title}:
       </Typography>
 
-      {valueToRender}
+      <Typography sx={{ color: "#737791", fontWeight: strong ? 600 : 300, fontSize: 14 }}>
+        {value}
+      </Typography>
     </Box>
   );
 };
 
 export default TitleValue;
-

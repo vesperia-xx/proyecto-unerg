@@ -59,7 +59,7 @@ const handleEditActivity = (activityId) => {
   console.log(`Editar actividad con id: ${activityId}`);
 };
 
-const PasantiasDashboard = () => {
+const ServicioDashboard = () => {
   const [activities, setActivities] = useState(initialActivities);
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedActivity, setSelectedActivity] = useState(null);
@@ -191,4 +191,4 @@ const PasantiasDashboard = () => {
   );
 };
 
-export default PasantiasDashboard;
+export default ServicioDashboard;
