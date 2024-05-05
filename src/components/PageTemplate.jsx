@@ -1,20 +1,20 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import LeftPanel, { leftPanelProps } from "@/components/LeftPanel";
+import LeftPanel from "@/components/LeftPanel";
 import { useMediaQuery } from "@mui/material";
 
-const PageTemplate = ({
-  children,
-  logo,
-}) => {
+const PageTemplate = ({ children, logo, showLeftPanel = true, groupLinks }) => {
   const isMobile = useMediaQuery("(max-width:600px)");
-  const leftPanelWidth = isMobile ? 0 : 250;
+  const leftPanelWidth = isMobile || !showLeftPanel ? 0 : 250; 
 
   return (
     <>
-      <LeftPanel
-        logo={logo}
-      />
+      {showLeftPanel && ( 
+        <LeftPanel
+          logo={logo}
+          groupLinks={groupLinks} 
+        />
+      )}
       <Box
         sx={{
           display: "flex",

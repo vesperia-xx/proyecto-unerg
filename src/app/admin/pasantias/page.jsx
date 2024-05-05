@@ -1,91 +1,64 @@
-'use client'
-import React, { useState } from "react";
-import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
-import { CloudUpload as CloudUploadIcon, Delete as DeleteIcon } from '@mui/icons-material';
-import { Table, TableBody, TableCell, TableHead, TableRow, Button } from '@mui/material';
-import RouterLinks from "@/routes/RouterLinks";
-import TableStyled from "@/components/TableStyled";
+'use client';
+
+import React from "react";
+
+import { Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
+
 import PageTemplate from "@/components/PageTemplate";
-import GroupLinksLeftPanel from "@/components/LeftPanel/GroupLinksLeftPanel";
+import TableStyled from "@/components/TableStyled";
 
-const PasantiasDocsAdd = () => {
-  const [uploadedDocuments, setUploadedDocuments] = useState([]);
-
-  const handleFileUpload = (event) => {
-    const files = event.target.files;
-    let newDocuments = [];
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      newDocuments.push({ id: uploadedDocuments.length + 1, name: file.name });
-    }
-    setUploadedDocuments([...uploadedDocuments, ...newDocuments]);
+const PasantiasEstudiantes = () => {
+  const studentData = {
+    id: 1,
+    name: 'Ricardo',
+    lastname: 'Aguilera',
+    ci: '12896748',
+    phoneNumber: '123-456-7890',
+    email: 'ricardo@example.com'
   };
 
-  const handleDeleteDocument = (id) => {
-    const updatedDocuments = uploadedDocuments.filter(doc => doc.id !== id);
-    setUploadedDocuments(updatedDocuments);
+  const pasantiasData = {
+    title: 'Título 1',
+    empresa: 'Empresa A',
+    tutorPasantias: 'Profesor X',
+    tutorEmpresarial: 'Ana',
+    hour: '4',
+    status: 'en progreso'
   };
 
   return (
-
-     <PageTemplate
-      headerTitle="Agregar actividad"
-      leftPanelContent={
-        <GroupLinksLeftPanel
-          title="Pasantias"
-          links={[
-            {
-              title: "Estudiantes",
-              url: RouterLinks.admin.pasantias.pasantias,
-              icon: <PeopleAltIcon />
-            },
-          ]}
-        />
-      }
-    > 
-
-      <div style={{ padding: '20px'}}>
-        <input
-          accept=".pdf"
-          style={{ display: 'none' }}
-          id="upload-button"
-          multiple
-          type="file"
-          onChange={handleFileUpload}
-        />
-        <label htmlFor="upload-button">
-          <Button color="primary" variant="contained" component="span" startIcon={<CloudUploadIcon />}>
-            Subir Documentos
-          </Button>
-        </label>
-      </div>
+    <PageTemplate>
       <TableStyled>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table sx={{ minWidth: 1200 }} aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell>#</TableCell>
-              <TableCell>Documento</TableCell>
-              <TableCell>Acciones</TableCell>
+              <TableCell>Nombre y Apellido</TableCell>
+              <TableCell>Cédula</TableCell>
+              <TableCell>Correo</TableCell>
+              <TableCell>Teléfono</TableCell>
+              <TableCell>Título</TableCell>
+              <TableCell>Empresa</TableCell>
+              <TableCell>Tutor Académico</TableCell>
+              <TableCell>Tutor Empresarial</TableCell>
+              <TableCell>Horas cumplidas</TableCell>
+              <TableCell>Estatus</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {uploadedDocuments.map((doc, index) => (
-              <TableRow key={doc.id}>
-                <TableCell>{index + 1}</TableCell>
-                <TableCell>{doc.name}</TableCell>
-                <TableCell>
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    style={{ color: '#EB5757' }}
-                    startIcon={<DeleteIcon />}
-                    onClick={() => handleDeleteDocument(doc.id)}
-                  >
-                    Borrar
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
+            <TableRow>
+              <TableCell>1</TableCell>
+              <TableCell>{`${studentData.name} ${studentData.lastname}`}</TableCell>
+              <TableCell>{studentData.ci}</TableCell>
+              <TableCell>{studentData.email}</TableCell>
+              <TableCell>{studentData.phoneNumber}</TableCell>
+              <TableCell>{pasantiasData.title}</TableCell>
+              <TableCell>{pasantiasData.empresa}</TableCell>
+              <TableCell>{pasantiasData.tutorPasantias}</TableCell>
+              <TableCell>{pasantiasData.tutorEmpresarial}</TableCell>
+              <TableCell>{pasantiasData.hour}</TableCell>
+              <TableCell>{pasantiasData.status}</TableCell>
+            </TableRow>
           </TableBody>
         </Table>
       </TableStyled>
@@ -93,4 +66,4 @@ const PasantiasDocsAdd = () => {
   );
 };
 
-export default PasantiasDocsAdd;
+export default PasantiasEstudiantes;

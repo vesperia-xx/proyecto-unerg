@@ -1,4 +1,3 @@
-'use client';
 import React, { useState } from "react";
 import { ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import Link from "next/link";
@@ -19,21 +18,8 @@ const LinkLeftPanel = ({ url, title, icon }) => {
         color: selected ? "#4079ED" : "#737791",
       }}
     >
-      {url ? (
-        <Link href={url}>
-          <a>
-            <ListItemIcon sx={{ color: selected ? "#FFFFFF" : "#737791" }}>
-              {icon}
-            </ListItemIcon>
-            <ListItemText
-              sx={{ color: selected ? "#FFFFFF" : "#737791" }}
-              primary={title}
-            />
-          </a>
-        </Link>
-      ) : (
-        
-        <>
+      <Link href={url}>
+        <a>
           <ListItemIcon sx={{ color: selected ? "#FFFFFF" : "#737791" }}>
             {icon}
           </ListItemIcon>
@@ -41,8 +27,8 @@ const LinkLeftPanel = ({ url, title, icon }) => {
             sx={{ color: selected ? "#FFFFFF" : "#737791" }}
             primary={title}
           />
-        </>
-      )}
+        </a>
+      </Link>
     </ListItemButton>
   );
 };
