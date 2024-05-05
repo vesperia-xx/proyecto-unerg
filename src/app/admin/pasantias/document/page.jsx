@@ -4,7 +4,6 @@ import { CloudUpload as CloudUploadIcon, Delete as DeleteIcon } from '@mui/icons
 import { Table, TableBody, TableCell, TableHead, TableRow, Button } from '@mui/material';
 import TableStyled from "@/components/TableStyled";
 import PageTemplate from "@/components/PageTemplate";
-import GroupLinksLeftPanel from "@/components/LeftPanel/GroupLinksLeftPanel";
 import HomeIcon from '@mui/icons-material/Home';
 import UsersIcon from '@mui/icons-material/People';
 
@@ -42,9 +41,8 @@ const PasantiasDocsAdd = () => {
   ];
 
   return (
-    <PageTemplate
-      leftPanel={<GroupLinksLeftPanel groups={leftPanelLinks} />}
-    >
+    <PageTemplate>
+      
       <div style={{ padding: '20px' }}>
         <input
           accept=".pdf"
