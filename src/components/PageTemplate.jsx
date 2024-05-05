@@ -1,10 +1,20 @@
-"use client";
 import React from "react";
 import Box from "@mui/material/Box";
+import LeftPanel, { leftPanelProps } from "@/components/LeftPanel";
+import { useMediaQuery } from "@mui/material";
 
-const PageTemplate = ({ children, UI_Settings }) => {
+const PageTemplate = ({
+  children,
+  logo,
+}) => {
+  const isMobile = useMediaQuery("(max-width:600px)");
+  const leftPanelWidth = isMobile ? 0 : 250;
+
   return (
     <>
+      <LeftPanel
+        logo={logo}
+      />
       <Box
         sx={{
           display: "flex",
@@ -12,10 +22,11 @@ const PageTemplate = ({ children, UI_Settings }) => {
           height: "98vh",
           position: "absolute",
           top: 0,
-          left: 0,
+          left: leftPanelWidth,
           right: 0,
           bottom: 0,
           bgcolor: "#FAFBFC",
+          overflow: "hidden",
         }}
       >
         <Box
