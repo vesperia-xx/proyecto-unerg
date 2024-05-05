@@ -19,7 +19,7 @@ const LinkLeftPanel = ({ url, title, icon }) => {
       }}
     >
       <Link href={url}>
-        <a>
+        
           <ListItemIcon sx={{ color: selected ? "#FFFFFF" : "#737791" }}>
             {icon}
           </ListItemIcon>
@@ -27,7 +27,7 @@ const LinkLeftPanel = ({ url, title, icon }) => {
             sx={{ color: selected ? "#FFFFFF" : "#737791" }}
             primary={title}
           />
-        </a>
+        
       </Link>
     </ListItemButton>
   );

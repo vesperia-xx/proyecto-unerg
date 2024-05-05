@@ -16,11 +16,11 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Image from 'next/image';
-import PropTypes from 'prop-types';
+
 
 const drawerWidth = 240;
 
-function ResponsiveDrawer({
+function LeftPanel({
   window,
   backgroundColor = '#ffffff',
   textColor = '#000000',
@@ -138,13 +138,5 @@ function ResponsiveDrawer({
   );
 }
 
-ResponsiveDrawer.propTypes = {
-  window: PropTypes.func,
-  backgroundColor: PropTypes.string,
-  textColor: PropTypes.string,
-  listItems: PropTypes.arrayOf(PropTypes.shape({
-    text: PropTypes.string.isRequired,
-  })).isRequired,
-};
 
-export default ResponsiveDrawer;
+export default LeftPanel;
