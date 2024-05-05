@@ -1,31 +1,27 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
+import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
-import AppBar from '@mui/material/AppBar';
+import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 import Image from 'next/image';
-
 
 const drawerWidth = 240;
 
-function LeftPanel({
-  window,
-  backgroundColor = '#ffffff',
-  textColor = '#000000',
-  listItems = [],
-}) {
+function LeftPanel(props) {
+  const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
 
@@ -45,33 +41,46 @@ function LeftPanel({
   };
 
   const drawer = (
-    <div style={{ backgroundColor }}>
-      <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
-        <div style={{ width: "130px", height: "70px" }}>
-          {/* Logo remains unchanged */}
+    <div>
+      <Toolbar style={{ marginBottom: '20px', marginTop: '20px' }}>
+        <Box display="flex" alignItems="center">
           <Image
             src="/logo_unerg.png"
             width={130}
             height={70}
             alt="Logo de la UNERG"
-            priority
           />
-        </div>
-      </Box>
+          <Typography variant="subtitle1" style={{ marginLeft: '10px' }}>
+            UNERG
+          </Typography>
+        </Box>
+      </Toolbar>
       <Divider />
       <List>
-        {listItems.map((item, index) => (
-          <ListItem key={item.text} disablePadding>
+        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+          <ListItem key={text} disablePadding>
             <ListItemButton>
               <ListItemIcon>
                 {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
               </ListItemIcon>
-              <ListItemText primary={item.text} style={{ color: textColor }} />
+              <ListItemText primary={text} />
             </ListItemButton>
           </ListItem>
         ))}
       </List>
       <Divider />
+      <List>
+        {['All mail', 'Trash', 'Spam'].map((text, index) => (
+          <ListItem key={text} disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
     </div>
   );
 
@@ -98,7 +107,7 @@ function LeftPanel({
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            UNERG
+            Responsive drawer
           </Typography>
         </Toolbar>
       </AppBar>
@@ -114,7 +123,7 @@ function LeftPanel({
           onTransitionEnd={handleDrawerTransitionEnd}
           onClose={handleDrawerClose}
           ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
+            keepMounted: true,
           }}
           sx={{
             display: { xs: 'block', sm: 'none' },
@@ -138,5 +147,8 @@ function LeftPanel({
   );
 }
 
+LeftPanel.propTypes = {
+  window: PropTypes.func,
+};
 
 export default LeftPanel;

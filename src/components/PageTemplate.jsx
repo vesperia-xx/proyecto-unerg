@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import LeftPanel from "@/components/LeftPanel";
 import { useMediaQuery } from "@mui/material";
 
-const PageTemplate = ({ children, logo, showLeftPanel = true, groupLinks }) => {
+const PageTemplate = ({ children, logo, showLeftPanel = true }) => {
   const isMobile = useMediaQuery("(max-width:600px)");
   const leftPanelWidth = isMobile || !showLeftPanel ? 0 : 250; 
 
@@ -12,7 +12,6 @@ const PageTemplate = ({ children, logo, showLeftPanel = true, groupLinks }) => {
       {showLeftPanel && ( 
         <LeftPanel
           logo={logo}
-          groupLinks={groupLinks} 
         />
       )}
       <Box
