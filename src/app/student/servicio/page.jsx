@@ -12,6 +12,21 @@ import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material'
 import { Grid, Typography, Button } from '@mui/material';
 import TableStyled from "@/components/TableStyled";
 
+import Sidebar from "@/components/Sidebar";
+
+import RouterLinks from "@/routes/RouterLinks";
+
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import ArticleIcon from "@mui/icons-material/Article";
+import LogoutIcon from '@mui/icons-material/Logout';
+
+const links = [
+  { text: 'Seguimiento', icon: <DashboardIcon />, route: RouterLinks.student.servicio.ServicioDashboard},
+  { text: 'Documentos', icon: <ArticleIcon />, route: RouterLinks.student.servicio.ServicioDocument},
+  { text: 'Salir', icon: <LogoutIcon />, route: RouterLinks.student.StudentDashboard},
+];
+
+
 // import { generarCartaCulminacionPDF } from './utils/pdfGenerator';
 
 //Constantes
@@ -130,7 +145,7 @@ const ServicioDashboard = () => {
 
   return (
     <PageTemplate>
-
+    <Sidebar title="Estudiante Servicio" links={links} />
       <Grid container spacing={3}>
         <Grid item xs={12} md={7}>
           <Grid container spacing={2}>

@@ -1,6 +1,6 @@
+"use client";
 import React from "react";
 import Box from "@mui/material/Box";
-import LeftPanel from "@/components/LeftPanel";
 import { useMediaQuery } from "@mui/material";
 
 const PageTemplate = ({ children, logo, showLeftPanel = true }) => {
@@ -9,11 +9,6 @@ const PageTemplate = ({ children, logo, showLeftPanel = true }) => {
 
   return (
     <>
-      {showLeftPanel && ( 
-        <LeftPanel
-          logo={logo}
-        />
-      )}
       <Box
         sx={{
           display: "flex",

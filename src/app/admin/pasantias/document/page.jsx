@@ -1,11 +1,26 @@
 'use client'
+
 import React, { useState } from "react";
 import { CloudUpload as CloudUploadIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { Table, TableBody, TableCell, TableHead, TableRow, Button } from '@mui/material';
+
 import TableStyled from "@/components/TableStyled";
 import PageTemplate from "@/components/PageTemplate";
 import HomeIcon from '@mui/icons-material/Home';
 import UsersIcon from '@mui/icons-material/People';
+import Sidebar from "@/components/Sidebar"; 
+
+import RouterLinks from "@/routes/RouterLinks";
+
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import ArticleIcon from "@mui/icons-material/Article";
+import LogoutIcon from '@mui/icons-material/Logout';
+
+const links = [
+  { text: 'Estudiantes', icon: <PeopleAltIcon />, route: RouterLinks.admin.pasantias.PasantiasEstudiantes },
+  { text: 'Documentos', icon: <ArticleIcon />, route: RouterLinks.admin.pasantias.PasantiasDocsAdd},
+  { text: 'Salir', icon: <LogoutIcon />, route: "/" },
+];
 
 const PasantiasDocsAdd = () => {
   const [uploadedDocuments, setUploadedDocuments] = useState([]);
@@ -42,7 +57,7 @@ const PasantiasDocsAdd = () => {
 
   return (
     <PageTemplate>
-      
+        <Sidebar title="Admin Pasantias" links={links} />
       <div style={{ padding: '20px' }}>
         <input
           accept=".pdf"

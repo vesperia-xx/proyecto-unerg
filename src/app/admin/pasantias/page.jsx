@@ -6,6 +6,19 @@ import { Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material"
 
 import PageTemplate from "@/components/PageTemplate";
 import TableStyled from "@/components/TableStyled";
+import Sidebar from "@/components/Sidebar";
+
+import RouterLinks from "@/routes/RouterLinks";
+
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import ArticleIcon from "@mui/icons-material/Article";
+import LogoutIcon from '@mui/icons-material/Logout';
+
+const links = [
+  { text: 'Estudiantes', icon: <PeopleAltIcon />, route: RouterLinks.admin.pasantias.PasantiasEstudiantes },
+  { text: 'Documentos', icon: <ArticleIcon />, route: RouterLinks.admin.pasantias.PasantiasDocsAdd},
+  { text: 'Salir', icon: <LogoutIcon />, route: "/" },
+];
 
 const PasantiasEstudiantes = () => {
   const studentData = {
@@ -28,6 +41,7 @@ const PasantiasEstudiantes = () => {
 
   return (
     <PageTemplate>
+      <Sidebar title="Admin Pasantias" links={links} />
       <TableStyled>
         <Table sx={{ minWidth: 1200 }} aria-label="simple table">
           <TableHead>

@@ -12,6 +12,20 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TableStyled from "@/components/TableStyled";
 
+import Sidebar from "@/components/Sidebar";
+
+import RouterLinks from "@/routes/RouterLinks";
+
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import ArticleIcon from "@mui/icons-material/Article";
+import LogoutIcon from '@mui/icons-material/Logout';
+
+const links = [
+  { text: 'Seguimiento', icon: <DashboardIcon />, route: RouterLinks.student.pasantias.PasantiasDashboard },
+  { text: 'Documentos', icon: <ArticleIcon />, route: RouterLinks.student.pasantias.PasantiasDocument },
+  { text: 'Salir', icon: <LogoutIcon />, route: RouterLinks.student.StudentDashboard},
+];
+
 const documentPasantias = [
   { id: 1, name: 'Documento 1', url: '/path/to/document1.pdf' },
   { id: 2, name: 'Documento 2', url: '/path/to/document2.pdf' },
@@ -27,6 +41,7 @@ const pasantiasDocument = () => {
 
   return (
     <PageTemplate>
+      <Sidebar title="Documentos" links={links} />
       <TableStyled>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>

@@ -7,6 +7,19 @@ import { Table, TableBody, TableCell, TableHead, TableRow, Button } from '@mui/m
 
 import TableStyled from "@/components/TableStyled";
 import PageTemplate from "@/components/PageTemplate";
+import Sidebar from "@/components/Sidebar";
+
+import RouterLinks from "@/routes/RouterLinks";
+
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import ArticleIcon from "@mui/icons-material/Article";
+import LogoutIcon from '@mui/icons-material/Logout';
+
+const links = [
+  { text: 'Estudiantes', icon: <PeopleAltIcon />, route: RouterLinks.admin.servicio.ServicioEstudiantes },
+  { text: 'Documentos', icon: <ArticleIcon />, route: RouterLinks.admin.servicio.ServcioDocsAdd },
+  { text: 'Salir', icon: <LogoutIcon />, route: "/" },
+];
 
 const ServicioDocsAdd = () => {
   const [uploadedDocuments, setUploadedDocuments] = useState([]);
@@ -28,7 +41,8 @@ const ServicioDocsAdd = () => {
 
   return (
     <PageTemplate>
-      <div style={{ padding: '20px'}}>
+      <Sidebar title="Admin Servicio" links={links} />
+      <div style={{ padding: '20px' }}>
         <input
           accept=".pdf"
           style={{ display: 'none' }}

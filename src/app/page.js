@@ -13,7 +13,7 @@ export default function Home() {
 
 			<br />
 
-      <Link href={RouterLinks.auth.registro}>Estudiante</Link>
+      <Link href={RouterLinks.student.StudentDashboard}>Estudiante</Link>
 
       <br />
 

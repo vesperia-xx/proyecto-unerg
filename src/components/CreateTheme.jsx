@@ -1,6 +1,5 @@
 import { createTheme } from "@mui/material";
 
-// Define el tema personalizado
 const theme = createTheme({
   palette: {
     primary: {

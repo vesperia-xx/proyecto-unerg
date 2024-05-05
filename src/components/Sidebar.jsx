@@ -1,0 +1,131 @@
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import CssBaseline from '@mui/material/CssBaseline';
+import Divider from '@mui/material/Divider';
+import Drawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import MenuIcon from '@mui/icons-material/Menu';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Image from 'next/image';
+
+const drawerWidth = 240;
+
+const Sidebar = ({ title, links }) => {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
+  const logo = (
+    <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: '5px', marginTop: '5px' }}>
+      <Image
+        src="/logo_unerg.png"
+        width={150}
+        height={70}
+        alt="Logo de la UNERG"
+      />
+    </Box>
+  );
+
+  const drawer = (
+    <div>
+      <Toolbar style={{ marginBottom: '20px', marginTop: '20px' }}>
+        <Box display="flex" alignItems="center">
+          {logo}
+        </Box>
+      </Toolbar>
+      <Divider />
+
+      <List>
+  {links.map((link, index) => (
+    <ListItemButton key={index} component="a" href={link.route} sx={{ color: '#737791', textDecoration: 'none' }}>
+      <ListItemIcon sx={{ color: '#737791' }}>
+        {link.icon}
+      </ListItemIcon>
+      <ListItemText
+        primary={link.text}
+        sx={{
+          fontSize: '14px !important',
+          color: '#737791',
+          '& span': {
+            fontSize: '14px !important',
+          },
+        }}
+        style={{ fontSize: '14px', color: '#737791' }}
+      />
+    </ListItemButton>
+  ))}
+</List>
+
+
+
+    </div>
+  );
+
+  return (
+    <Box sx={{ display: 'flex' }}>
+      <CssBaseline />
+      <AppBar position="fixed" sx={{ width: { sm: `calc(100% - ${drawerWidth}px)` } }}>
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { sm: 'none' } }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" noWrap component="div">
+            {title}
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <Box component="nav" sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}>
+        <Drawer
+          variant="temporary"
+          open={mobileOpen}
+          onClose={handleDrawerToggle}
+          ModalProps={{
+            keepMounted: true,
+          }}
+          sx={{
+            display: { xs: 'block', sm: 'none' },
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+          }}
+        >
+          {drawer}
+        </Drawer>
+        <Drawer
+          variant="permanent"
+          sx={{
+            display: { xs: 'none', sm: 'block' },
+            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+          }}
+          open
+        >
+          {drawer}
+        </Drawer>
+      </Box>
+    </Box>
+  );
+}
+
+Sidebar.propTypes = {
+  title: PropTypes.string.isRequired,
+  links: PropTypes.arrayOf(PropTypes.shape({
+    text: PropTypes.string.isRequired,
+    icon: PropTypes.element.isRequired,
+    route: PropTypes.string.isRequired,
+  })).isRequired,
+};
+
+export default Sidebar;

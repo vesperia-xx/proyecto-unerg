@@ -1,5 +1,4 @@
 "use client";
-
 import { Box, styled } from "@mui/material";
 
 const CustomBox = styled(Box)(({ theme }) => ({

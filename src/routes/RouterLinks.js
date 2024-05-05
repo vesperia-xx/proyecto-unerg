@@ -6,6 +6,7 @@ const RouterLinks = {
 		registro: "/auth/registro",
 	},
 	student: {
+		StudentDashboard: "/student",
 		pasantias:{
 			PasantiasDashboard: "/student/pasantias",
 			PasantiasDocument: "/student/pasantias/document",
