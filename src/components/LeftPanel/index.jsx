@@ -47,6 +47,7 @@ function LeftPanel({
   const drawer = (
     <div style={{ backgroundColor }}>
       <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
+       
         <div style={{ width: "130px", height: "70px" }}>
           {/* Logo remains unchanged */}
           <Image
@@ -64,7 +65,7 @@ function LeftPanel({
           <ListItem key={item.text} disablePadding>
             <ListItemButton>
               <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+               <InboxIcon />  <MailIcon />
               </ListItemIcon>
               <ListItemText primary={item.text} style={{ color: textColor }} />
             </ListItemButton>
