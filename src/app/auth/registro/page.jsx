@@ -67,7 +67,7 @@ export default function SignUp() {
               <Grid item xs={12} sm={6}>
                 <TextField
                   autoComplete="given-name"
-                  name="firstName"
+                  name="name"
                   required
                   fullWidth
                   id="firstName"
@@ -144,7 +144,11 @@ export default function SignUp() {
             </Grid>
           </Box>
         </Box>
+        <br />
+
       </Container>
+
+
     </ThemeProvider>
   );
 }

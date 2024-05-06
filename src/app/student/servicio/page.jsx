@@ -28,10 +28,7 @@ const links = [
 
 const user = { name: 'Maria Diaz', avatarUrl: '/perfil.jpg' };
 
-// import { generarCartaCulminacionPDF } from './utils/pdfGenerator';
-
-//Constantes
-const initialActivities = [
+const servicioActivities = [
   {
     id: 'activity_1',
     activity: 'Actividad 1',
@@ -65,9 +62,8 @@ const studentServicio = {
   estatus: 'Pendiente'
 };
 
-//Actividades
 const ServicioDashboard = () => {
-  const [activities, setActivities] = useState(initialActivities);
+  const [activities, setActivities] = useState(servicioActivities); // Changed pasantiasActivities to servicioActivities
   const [student, setStudent] = useState(studentServicio);
   const [totalHours, setTotalHours] = useState(studentServicio.hour);
   const [openModal, setOpenModal] = useState(false);
@@ -75,7 +71,6 @@ const ServicioDashboard = () => {
   const [editedActivity, setEditedActivity] = useState(null);
   const [canDownload, setCanDownload] = useState(false);
 
-  //Horas
   useEffect(() => {
     const newTotalHours = activities.reduce((total, activity) => total + (+activity.hours), 0);
     setTotalHours(newTotalHours);
@@ -84,26 +79,22 @@ const ServicioDashboard = () => {
     } else {
       setCanDownload(false);
     }
-    // Actualizar el estatus
     if (newTotalHours >= 120 && student.estatus !== 'Completado') {
       setStudent(prevStudent => ({ ...prevStudent, estatus: 'Completado' }));
     }
   }, [activities, student.estatus]);
 
-  //Borrar actividad
   const handleDeleteActivity = (activityId) => {
     const updatedActivities = activities.filter(activity => activity.id !== activityId);
     setActivities(updatedActivities);
   };
 
-  //Editar pdf
   const handleEditActivity = (activityId) => {
     const editedActivity = activities.find(activity => activity.id === activityId);
     setEditedActivity(editedActivity);
     setOpenEditModal(true);
   };
 
-  //Modal
   const handleOpenModal = () => {
     if (student.estatus !== 'Completado') {
       setOpenModal(true);
@@ -119,7 +110,6 @@ const ServicioDashboard = () => {
   };
 
   const handleAddActivity = (newActivity) => {
-    // No permitir agregar actividades si el estatus es 'Completado'
     if (student.estatus !== 'Completado') {
       const updatedActivities = [...activities, newActivity];
       setActivities(updatedActivities);
@@ -137,11 +127,6 @@ const ServicioDashboard = () => {
     });
     setActivities(updatedActivities);
     setOpenEditModal(false);
-  };
-
-  //Generar pdf
-  const handleDownloadCompletionLetter = () => {
-    generarCartaCulminacionPDF(studentData, student, activities);
   };
 
   return (

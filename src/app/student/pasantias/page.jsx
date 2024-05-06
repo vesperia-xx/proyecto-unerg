@@ -31,7 +31,7 @@ const user = { name: 'Maria Diaz', avatarUrl: '/perfil.jpg' };
 // import { generarCartaCulminacionPDF } from './utils/pdfGenerator';
 
 //Constantes
-const initialActivities = [
+const pasantiasActivities = [
   {
     id: 'activity_1',
     activity: 'Actividad 1',
@@ -67,7 +67,7 @@ const studentPasantias = {
 
 //Actividades
 const PasantiasDashboard = () => {
-  const [activities, setActivities] = useState(initialActivities);
+  const [activities, setActivities] = useState(pasantiasActivities);
   const [student, setStudent] = useState(studentPasantias);
   const [totalHours, setTotalHours] = useState(studentPasantias.hour);
   const [openModal, setOpenModal] = useState(false);
