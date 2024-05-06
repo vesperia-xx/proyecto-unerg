@@ -5,15 +5,21 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
 const style = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
+  width: '90%',
+  maxWidth: 400,
+  bgcolor: '#FFFFFF',
   boxShadow: 24,
+  borderRadius: 3,
   p: 4,
+  transition: 'transform 0.3s ease-in-out',
 };
 
 const ModalActivityPasantias = ({ open, onClose, onAddActivity, onEditActivity, editedActivity }) => {
@@ -44,17 +50,49 @@ const ModalActivityPasantias = ({ open, onClose, onAddActivity, onEditActivity, 
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    const numericValue = name === 'hours' && !isNaN(value) ? parseInt(value, 10) : value;
+    let numericValue = value;
+
+    // Si es el campo de horas y el valor no es un número, no actualices numericValue
+    if (name === 'hours' && isNaN(value)) {
+      return;
+    }
+
+    // Si es el campo de horas, convierte el valor a entero
+    if (name === 'hours') {
+      numericValue = parseInt(value, 10);
+    }
+
+    // Validar que la fecha de inicio no sea posterior a la fecha de fin
+    if (name === 'startDate') {
+      const endDate = new Date(activityData.endDate);
+      const startDate = new Date(value);
+
+      if (startDate > endDate) {
+        alert('La fecha de inicio no puede ser posterior a la fecha de fin.');
+        return;
+      }
+    }
+
+    // Validar que la fecha de fin no sea anterior a la fecha de inicio
+    if (name === 'endDate') {
+      const startDate = new Date(activityData.startDate);
+      const endDate = new Date(value);
+
+      if (endDate < startDate) {
+        alert('La fecha de fin no puede ser anterior a la fecha de inicio.');
+        return;
+      }
+    }
+
     setActivityData({ ...activityData, [name]: numericValue });
   };
-
 
   const handleAction = () => {
     if (activityData.activity && activityData.startDate && activityData.endDate && activityData.hours) {
       if (editedActivity) {
         onEditActivity({ ...editedActivity, ...activityData });
       } else {
-        onAddActivity({ ...activityData, id: Date.now().toString() }); 
+        onAddActivity({ ...activityData, id: Date.now().toString() });
       }
       onClose();
     } else {
@@ -70,7 +108,7 @@ const ModalActivityPasantias = ({ open, onClose, onAddActivity, onEditActivity, 
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        <form>
+        <form style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <TextField
             style={{ width: "200px", margin: "5px" }}
             type="text"
@@ -81,29 +119,28 @@ const ModalActivityPasantias = ({ open, onClose, onAddActivity, onEditActivity, 
             onChange={handleChange}
             required
           />
-          <br />
           <TextField
             style={{ width: "200px", margin: "5px" }}
             type="date"
             name="startDate"
-            label="Fecha de Inicio"
             variant="outlined"
             value={activityData.startDate}
             onChange={handleChange}
             required
+            InputLabelProps={{ shrink: true }} 
+            label="Fecha de Inicio" 
           />
-          <br />
           <TextField
             style={{ width: "200px", margin: "5px" }}
             type="date"
             name="endDate"
-            label="Fecha de Fin"
             variant="outlined"
             value={activityData.endDate}
             onChange={handleChange}
             required
+            InputLabelProps={{ shrink: true }} 
+            label="Fecha de Fin" 
           />
-          <br />
           <TextField
             style={{ width: "200px", margin: "5px" }}
             type="number"
@@ -114,8 +151,7 @@ const ModalActivityPasantias = ({ open, onClose, onAddActivity, onEditActivity, 
             onChange={handleChange}
             required
           />
-          <br />
-          <Button variant="contained" color="primary" onClick={handleAction}>
+          <Button variant="contained" style={{ backgroundColor: '#4079ED', color: '#FFFFFF', marginTop: '10px' }} onClick={handleAction}>
             {editedActivity ? 'Editar' : 'Guardar'}
           </Button>
         </form>

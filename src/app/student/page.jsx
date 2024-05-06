@@ -11,14 +11,19 @@ import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
 
 const links = [
-    { text: 'Mi perfil', icon: <PersonIcon />, route: RouterLinks.student.StudentDashboard },
+	{ text: 'Mi perfil', icon: <PersonIcon />, route: RouterLinks.student.StudentDashboard },
 	{ text: 'Salir', icon: <LogoutIcon />, route: "/" },
 ];
+
+const user = { name: 'Maria Diaz', avatarUrl: '/perfil.jpg' };
 
 const DashboardStudent = () => {
 	return (
 		<PageTemplate>
-			<Sidebar title="Estudiante" links={links} />
+			<Sidebar title="Estudiante" links={links}
+				profileName={user.name}
+				profileImage={user.avatarUrl}
+			/>
 			todos los items del Dashboard aqui
 
 			<br />

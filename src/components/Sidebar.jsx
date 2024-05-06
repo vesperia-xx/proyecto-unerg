@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -17,7 +17,7 @@ import Image from 'next/image';
 
 const drawerWidth = 240;
 
-const Sidebar = ({ title, links }) => {
+const Sidebar = ({ title, links, profileImage, profileName }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {
@@ -25,13 +25,14 @@ const Sidebar = ({ title, links }) => {
   };
 
   const logo = (
-    <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: '5px', marginTop: '5px' }}>
+    <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '5px', marginTop: '5px' }}>
       <Image
         src="/logo_unerg.png"
-        width={150}
-        height={70}
+        width={120}
+        height={50}
         alt="Logo de la UNERG"
       />
+      <Typography variant="h6" sx={{ marginLeft: '10px', color: '#05004E', fontWeight: 'bold' }}>UNERG</Typography>
     </Box>
   );
 
@@ -43,37 +44,33 @@ const Sidebar = ({ title, links }) => {
         </Box>
       </Toolbar>
       <Divider />
-
       <List>
-  {links.map((link, index) => (
-    <ListItemButton key={index} component="a" href={link.route} sx={{ color: '#737791', textDecoration: 'none' }}>
-      <ListItemIcon sx={{ color: '#737791' }}>
-        {link.icon}
-      </ListItemIcon>
-      <ListItemText
-        primary={link.text}
-        sx={{
-          fontSize: '14px !important',
-          color: '#737791',
-          '& span': {
-            fontSize: '14px !important',
-          },
-        }}
-        style={{ fontSize: '14px', color: '#737791' }}
-      />
-    </ListItemButton>
-  ))}
-</List>
-
-
-
+        {links.map((link, index) => (
+          <ListItemButton key={index} component="a" href={link.route} sx={{ color: '#737791', textDecoration: 'none' }}>
+            <ListItemIcon sx={{ color: '#737791' }}>
+              {link.icon}
+            </ListItemIcon>
+            <ListItemText
+              primary={link.text}
+              sx={{
+                fontSize: '14px !important',
+                color: '#737791',
+                '& span': {
+                  fontSize: '14px !important',
+                },
+              }}
+              style={{ fontSize: '14px', color: '#737791' }}
+            />
+          </ListItemButton>
+        ))}
+      </List>
     </div>
   );
 
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="fixed" sx={{ width: { sm: `calc(100% - ${drawerWidth}px)` } }}>
+      <AppBar position="fixed" sx={{ width: { sm: `calc(100% - ${drawerWidth}px)` }, backgroundColor: '#4079ED' }}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -84,9 +81,17 @@ const Sidebar = ({ title, links }) => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
+          <Typography variant="h6" noWrap component="div" sx={{ color: '#fff', flexGrow: 1 }}>
             {title}
           </Typography>
+
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Image src={profileImage} alt="Profile" width={40} height={40} style={{ borderRadius: '50%' }} />
+            <Typography variant="body1" sx={{ color: '#fff', marginLeft: '10px' }}>
+              {profileName}
+            </Typography>
+          </Box>
+
         </Toolbar>
       </AppBar>
       <Box component="nav" sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}>
@@ -126,6 +131,8 @@ Sidebar.propTypes = {
     icon: PropTypes.element.isRequired,
     route: PropTypes.string.isRequired,
   })).isRequired,
+  profileImage: PropTypes.string.isRequired,
+  profileName: PropTypes.string.isRequired,
 };
 
 export default Sidebar;

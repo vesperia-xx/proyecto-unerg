@@ -21,11 +21,12 @@ import ArticleIcon from "@mui/icons-material/Article";
 import LogoutIcon from '@mui/icons-material/Logout';
 
 const links = [
-  { text: 'Seguimiento', icon: <DashboardIcon />, route: RouterLinks.student.servicio.ServicioDashboard},
-  { text: 'Documentos', icon: <ArticleIcon />, route: RouterLinks.student.servicio.ServicioDocument},
-  { text: 'Salir', icon: <LogoutIcon />, route: RouterLinks.student.StudentDashboard},
+  { text: 'Seguimiento', icon: <DashboardIcon />, route: RouterLinks.student.servicio.ServicioDashboard },
+  { text: 'Documentos', icon: <ArticleIcon />, route: RouterLinks.student.servicio.ServicioDocument },
+  { text: 'Salir', icon: <LogoutIcon />, route: RouterLinks.student.StudentDashboard },
 ];
 
+const user = { name: 'Maria Diaz', avatarUrl: '/perfil.jpg' };
 
 // import { generarCartaCulminacionPDF } from './utils/pdfGenerator';
 
@@ -74,7 +75,7 @@ const ServicioDashboard = () => {
   const [editedActivity, setEditedActivity] = useState(null);
   const [canDownload, setCanDownload] = useState(false);
 
-//Horas
+  //Horas
   useEffect(() => {
     const newTotalHours = activities.reduce((total, activity) => total + (+activity.hours), 0);
     setTotalHours(newTotalHours);
@@ -83,26 +84,26 @@ const ServicioDashboard = () => {
     } else {
       setCanDownload(false);
     }
-// Actualizar el estatus
+    // Actualizar el estatus
     if (newTotalHours >= 120 && student.estatus !== 'Completado') {
       setStudent(prevStudent => ({ ...prevStudent, estatus: 'Completado' }));
     }
   }, [activities, student.estatus]);
 
-//Borrar actividad
+  //Borrar actividad
   const handleDeleteActivity = (activityId) => {
     const updatedActivities = activities.filter(activity => activity.id !== activityId);
     setActivities(updatedActivities);
   };
-  
-//Editar pdf
+
+  //Editar pdf
   const handleEditActivity = (activityId) => {
     const editedActivity = activities.find(activity => activity.id === activityId);
     setEditedActivity(editedActivity);
     setOpenEditModal(true);
   };
 
-//Modal
+  //Modal
   const handleOpenModal = () => {
     if (student.estatus !== 'Completado') {
       setOpenModal(true);
@@ -145,7 +146,11 @@ const ServicioDashboard = () => {
 
   return (
     <PageTemplate>
-    <Sidebar title="Estudiante Servicio" links={links} />
+      <Sidebar title="Estudiante Servicio" links={links}
+        profileName={user.name}
+        profileImage={user.avatarUrl}
+      />
+
       <Grid container spacing={3}>
         <Grid item xs={12} md={7}>
           <Grid container spacing={2}>
@@ -154,8 +159,6 @@ const ServicioDashboard = () => {
                 <Typography variant="h6" gutterBottom>Datos del Estudiante</Typography>
                 <TitleValue title="Nombre y Apellido" value={`${studentData.name} ${studentData.lastname}`} />
                 <TitleValue title="Cedula" value={studentData.ci} />
-                <TitleValue title="Teléfono" value={studentData.phoneNumber} />
-                <TitleValue title="Email" value={studentData.email} />
                 <TitleValue title="Empresa" value={student.empresa} />
                 <TitleValue title="Tutor Academico" value={student.tutorAcademico} />
                 <TitleValue title="Tutor Empresarial" value={student.tutorEmpresarial} />
@@ -176,15 +179,15 @@ const ServicioDashboard = () => {
           </Grid>
 
           <div style={{ marginTop: 20, textAlign: 'center' }}>
-          <Button
-          variant="outlined"
-          style={{ color: '#47AD64', borderColor: '#47AD64', textTransform: 'none' }}
-          startIcon={<GetAppIcon style={{ color: '#47AD64' }} />}
-          // onClick={handleDownloadCompletionLetter} 
-          disabled={!canDownload} 
-        >
-          Decargar carta de culminación
-        </Button>
+            <Button
+              variant="outlined"
+              style={{ color: '#47AD64', borderColor: '#47AD64', textTransform: 'none' }}
+              startIcon={<GetAppIcon style={{ color: '#47AD64' }} />}
+              // onClick={handleDownloadCompletionLetter} 
+              disabled={!canDownload}
+            >
+              Decargar carta de culminación
+            </Button>
           </div>
 
         </Grid>

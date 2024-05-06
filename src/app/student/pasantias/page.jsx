@@ -21,10 +21,12 @@ import ArticleIcon from "@mui/icons-material/Article";
 import LogoutIcon from '@mui/icons-material/Logout';
 
 const links = [
-  { text: 'Seguimiento', icon: <DashboardIcon />, route: RouterLinks.student.pasantias.PasantiasDashboard},
+  { text: 'Seguimiento', icon: <DashboardIcon />, route: RouterLinks.student.pasantias.PasantiasDashboard },
   { text: 'Documentos', icon: <ArticleIcon />, route: RouterLinks.student.pasantias.PasantiasDocument },
-  {text: 'Salir', icon: <LogoutIcon />, route: RouterLinks.student.StudentDashboard},
+  { text: 'Salir', icon: <LogoutIcon />, route: RouterLinks.student.StudentDashboard },
 ];
+
+const user = { name: 'Maria Diaz', avatarUrl: '/perfil.jpg' };
 
 // import { generarCartaCulminacionPDF } from './utils/pdfGenerator';
 
@@ -144,7 +146,10 @@ const PasantiasDashboard = () => {
 
   return (
     <PageTemplate>
-      <Sidebar title="Estudiante Pasantias" links={links} />
+      <Sidebar title="Estudiante Pasantias" links={links}
+        profileName={user.name}
+        profileImage={user.avatarUrl} />
+
       <Grid container spacing={3}>
         <Grid item xs={12} md={7}>
           <Grid container spacing={2}>
@@ -153,8 +158,6 @@ const PasantiasDashboard = () => {
                 <Typography variant="h6" gutterBottom>Datos del Estudiante</Typography>
                 <TitleValue title="Nombre y Apellido" value={`${studentData.name} ${studentData.lastname}`} />
                 <TitleValue title="Cedula" value={studentData.ci} />
-                <TitleValue title="Teléfono" value={studentData.phoneNumber} />
-                <TitleValue title="Email" value={studentData.email} />
                 <TitleValue title="Empresa" value={student.empresa} />
                 <TitleValue title="Tutor Academico" value={student.tutorAcademico} />
                 <TitleValue title="Tutor Empresarial" value={student.tutorEmpresarial} />

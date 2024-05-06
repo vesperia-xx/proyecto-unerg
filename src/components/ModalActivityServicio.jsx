@@ -5,15 +5,21 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
 const style = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
+  width: '90%',
+  maxWidth: 400,
+  bgcolor: '#FFFFFF',
   boxShadow: 24,
+  borderRadius: 3,
   p: 4,
+  transition: 'transform 0.3s ease-in-out',
 };
 
 const ModalActivityServicio = ({ open, onClose, onAddActivity, onEditActivity, editedActivity }) => {
@@ -48,13 +54,12 @@ const ModalActivityServicio = ({ open, onClose, onAddActivity, onEditActivity, e
     setActivityData({ ...activityData, [name]: numericValue });
   };
 
-
   const handleAction = () => {
     if (activityData.activity && activityData.week && activityData.date && activityData.hours) {
       if (editedActivity) {
         onEditActivity({ ...editedActivity, ...activityData });
       } else {
-        onAddActivity({ ...activityData, id: Date.now().toString() }); 
+        onAddActivity({ ...activityData, id: Date.now().toString() });
       }
       onClose();
     } else {
@@ -86,7 +91,7 @@ const ModalActivityServicio = ({ open, onClose, onAddActivity, onEditActivity, e
             style={{ width: "200px", margin: "5px" }}
             type="number"
             name="week"
-            label="Semana (Número)"
+            label="Semana"
             variant="outlined"
             value={activityData.week}
             onChange={handleChange}
@@ -100,6 +105,7 @@ const ModalActivityServicio = ({ open, onClose, onAddActivity, onEditActivity, e
             label="Fecha"
             variant="outlined"
             value={activityData.date}
+            InputLabelProps={{ shrink: true }}
             onChange={handleChange}
             required
           />
@@ -115,9 +121,11 @@ const ModalActivityServicio = ({ open, onClose, onAddActivity, onEditActivity, e
             required
           />
           <br />
-          <Button variant="contained" color="primary" onClick={handleAction}>
-            {editedActivity ? 'Editar' : 'Guardar'}
-          </Button>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '20px' }}>
+            <Button variant="contained" style={{ backgroundColor: '#4079ED', color: '#FFFFFF' }} onClick={handleAction}>
+              {editedActivity ? 'Editar' : 'Guardar'}
+            </Button>
+          </div>
         </form>
       </Box>
     </Modal>

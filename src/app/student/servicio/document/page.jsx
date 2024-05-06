@@ -26,6 +26,8 @@ const links = [
   { text: 'Salir', icon: <LogoutIcon />, route: RouterLinks.student.StudentDashboard },
 ];
 
+const user = { name: 'Maria Diaz', avatarUrl: '/perfil.jpg' };
+
 const documentServicio = [
   { id: 1, name: 'Documento 1', url: '/path/to/document1.pdf' },
   { id: 2, name: 'Documento 2', url: '/path/to/document2.pdf' },
@@ -41,7 +43,10 @@ const servicioDocument = () => {
 
   return (
     <PageTemplate>
-      <Sidebar title="Documentos" links={links} />
+      <Sidebar title="Documentos" links={links}
+        profileName={user.name}
+        profileImage={user.avatarUrl}
+      />
       <TableStyled>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
