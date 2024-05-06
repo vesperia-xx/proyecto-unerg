@@ -22,6 +22,8 @@ const links = [
   { text: 'Salir', icon: <LogoutIcon />, route: "/" },
 ];
 
+const user = { name: 'Admin', avatarUrl: '/admin.png' };
+
 const PasantiasDocsAdd = () => {
   const [uploadedDocuments, setUploadedDocuments] = useState([]);
 
@@ -57,7 +59,11 @@ const PasantiasDocsAdd = () => {
 
   return (
     <PageTemplate>
-        <Sidebar title="Admin Pasantias" links={links} />
+        <Sidebar title="Admin Pasantias" links={links} 
+           profileName={user.name}
+           profileImage={user.avatarUrl}
+        />
+
       <div style={{ padding: '20px' }}>
         <input
           accept=".pdf"

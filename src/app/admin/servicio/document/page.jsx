@@ -21,6 +21,8 @@ const links = [
   { text: 'Salir', icon: <LogoutIcon />, route: "/" },
 ];
 
+const user = { name: 'Admin', avatarUrl: '/admin.png' };
+
 const ServicioDocsAdd = () => {
   const [uploadedDocuments, setUploadedDocuments] = useState([]);
 
@@ -41,7 +43,12 @@ const ServicioDocsAdd = () => {
 
   return (
     <PageTemplate>
-      <Sidebar title="Admin Servicio" links={links} />
+
+      <Sidebar title="Admin Servicio" links={links} 
+       profileName={user.name}
+       profileImage={user.avatarUrl}
+      />
+      
       <div style={{ padding: '20px' }}>
         <input
           accept=".pdf"

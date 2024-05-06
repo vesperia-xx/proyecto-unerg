@@ -21,6 +21,8 @@ const links = [
     { text: 'Salir', icon: <LogoutIcon />, route: "/" },
 ];
 
+const user = { name: 'Admin', avatarUrl: '/admin.png' };
+
 const ServicioEstudiantes = () => {
     const studentData = {
         name: 'Maria',
@@ -41,7 +43,12 @@ const ServicioEstudiantes = () => {
 
     return (
         <PageTemplate>
-            <Sidebar title="Admin Servicio" links={links} />
+
+            <Sidebar title="Admin Servicio" links={links} 
+             profileName={user.name}
+             profileImage={user.avatarUrl}
+            />
+
             <TableStyled>
                 <Table sx={{ minWidth: 1200 }} aria-label="simple table">
                     <TableHead>
