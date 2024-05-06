@@ -79,7 +79,7 @@ const PasantiasDocsAdd = () => {
           </Button>
         </label>
       </div>
-      <TableStyled>
+      <TableStyled hover>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>

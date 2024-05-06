@@ -216,13 +216,13 @@ const ServicioDashboard = () => {
         <ModalActivityServicio open={openEditModal} onClose={handleCloseEditModal} onEditActivity={handleEditActivitySubmit} editedActivity={editedActivity} />
       </div>
 
-      <TableStyled>
+      <TableStyled hover>
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
               <TableCell>#</TableCell>
               <TableCell>Actividad</TableCell>
-              <TableCell>Semana (Número)</TableCell>
+              <TableCell>Semana</TableCell>
               <TableCell>Fecha</TableCell>
               <TableCell>Horas</TableCell>
               <TableCell>Acciones</TableCell>
@@ -249,6 +249,8 @@ const ServicioDashboard = () => {
           </TableBody>
         </Table>
       </TableStyled>
+
+      <br />
 
     </PageTemplate>
   );

@@ -19,9 +19,17 @@ const drawerWidth = 240;
 
 const Sidebar = ({ title, links, profileImage, profileName }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(null);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
+  };
+
+  const handleListItemClick = (index) => {
+    setSelectedIndex(index);
+    if (mobileOpen) {
+      setMobileOpen(false); // Cerrar el menú lateral en dispositivos móviles
+    }
   };
 
   const logo = (
@@ -31,6 +39,7 @@ const Sidebar = ({ title, links, profileImage, profileName }) => {
         width={120}
         height={50}
         alt="Logo de la UNERG"
+        priority
       />
       <Typography variant="h6" sx={{ marginLeft: '10px', color: '#05004E', fontWeight: 'bold' }}>UNERG</Typography>
     </Box>
@@ -46,20 +55,27 @@ const Sidebar = ({ title, links, profileImage, profileName }) => {
       <Divider />
       <List>
         {links.map((link, index) => (
-          <ListItemButton key={index} component="a" href={link.route} sx={{ color: '#737791', textDecoration: 'none' }}>
-            <ListItemIcon sx={{ color: '#737791' }}>
+          <ListItemButton
+            key={index}
+            component="a"
+            href={link.route}
+            selected={selectedIndex === index} 
+            onClick={() => handleListItemClick(index)}
+            sx={{ color: selectedIndex === index ? '#4079ED' : '#737791', textDecoration: 'none' }} // Cambiar color seleccionado a azul
+          >
+            <ListItemIcon sx={{ color: selectedIndex === index ? '#4079ED' : '#737791' }}> {/* Cambiar color de iconos a blanco */}
               {link.icon}
             </ListItemIcon>
             <ListItemText
               primary={link.text}
               sx={{
                 fontSize: '14px !important',
-                color: '#737791',
+                color: selectedIndex === index ? '#4079ED' : '#737791',
                 '& span': {
                   fontSize: '14px !important',
                 },
               }}
-              style={{ fontSize: '14px', color: '#737791' }}
+              style={{ fontSize: '14px', color: selectedIndex === index ? '#4079ED' : '#737791' }}
             />
           </ListItemButton>
         ))}
@@ -86,7 +102,15 @@ const Sidebar = ({ title, links, profileImage, profileName }) => {
           </Typography>
 
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Image src={profileImage} alt="Profile" width={40} height={40} style={{ borderRadius: '50%' }} />
+            <Image
+              src={profileImage}
+              alt="Profile"
+              width={40}
+              height={40}
+              style={{
+                borderRadius: '50%',
+              }}
+            />
             <Typography variant="body1" sx={{ color: '#fff', marginLeft: '10px' }}>
               {profileName}
             </Typography>

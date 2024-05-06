@@ -49,7 +49,7 @@ const PasantiasEstudiantes = () => {
          profileImage={user.avatarUrl}
       />
 
-      <TableStyled>
+      <TableStyled hover>
         <Table sx={{ minWidth: 1200 }} aria-label="simple table">
           <TableHead>
             <TableRow>

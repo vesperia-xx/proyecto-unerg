@@ -47,7 +47,7 @@ const pasantiasDocument = () => {
         profileName={user.name}
         profileImage={user.avatarUrl}
       />
-      <TableStyled>
+      <TableStyled hover>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>

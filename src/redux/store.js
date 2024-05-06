@@ -3,7 +3,7 @@ import { studentSlice } from "./slices/studentSlice";
 
 export const store = configureStore({
   reducer: {
-    student: studentSlice,
+    student: studentSlice.reducer, 
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

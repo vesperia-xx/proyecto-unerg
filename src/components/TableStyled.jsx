@@ -13,33 +13,31 @@ const TableStyled = ({ title, hover = false, children }) => {
           py: 1,
           color: "#96A5B8",
         },
-        ".MuiTableBody-root .MuiTableRow-root": {
-          ":hover": hover ? { bgcolor: "#0001" } : {},
-          "&:last-child td, &:last-child th": { border: 0 },
+        ".MuiTableBody-root .MuiTableRow-root:hover": {
+          backgroundColor: hover ? "#f5f5f5" : "inherit",
         },
         ".MuiTableCell-body": {
           fontSize: 14,
           py: 0.8,
           color: "#444A6D",
         },
-		
         // barra de desplazamiento
         ".MuiTableContainer-root": {
           overflow: "auto",
-          maxHeight: "400px", 
+          maxHeight: "400px",
           "&::-webkit-scrollbar": {
-            width: "8px", 
-            height: "8px", 
+            width: "8px",
+            height: "8px",
           },
           "&::-webkit-scrollbar-track": {
             background: "#f1f1f1",
           },
           "&::-webkit-scrollbar-thumb": {
-            background: "#96A5B8", 
+            background: "#96A5B8",
             borderRadius: "4px",
           },
           "&::-webkit-scrollbar-thumb:hover": {
-            background: "#75839e", 
+            background: "#75839e",
           },
         },
       }}
@@ -51,10 +49,13 @@ const TableStyled = ({ title, hover = false, children }) => {
       )}
 
       <div style={{ overflowX: "auto" }}>
-        <TableContainer>{children}</TableContainer>
+        <TableContainer sx={{ "& .MuiTableRow-root:hover": { backgroundColor: hover ? "#f5f5f5" : "inherit" } }}>
+          {children}
+        </TableContainer>
       </div>
     </CustomBox>
   );
 };
 
 export default TableStyled;
+

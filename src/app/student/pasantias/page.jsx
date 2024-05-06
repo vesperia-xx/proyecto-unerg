@@ -215,7 +215,7 @@ const PasantiasDashboard = () => {
         <ModalActivityPasantias open={openEditModal} onClose={handleCloseEditModal} onEditActivity={handleEditActivitySubmit} editedActivity={editedActivity} />
       </div>
 
-      <TableStyled>
+      <TableStyled hover>
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -248,6 +248,8 @@ const PasantiasDashboard = () => {
           </TableBody>
         </Table>
       </TableStyled>
+
+      <br />
 
     </PageTemplate>
   );
