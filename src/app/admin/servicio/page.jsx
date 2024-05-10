@@ -94,13 +94,11 @@ const ServicioEstudiantes = () => {
                             <TableCell>#</TableCell>
                             <TableCell>Nombre y Apellido</TableCell>
                             <TableCell>Cédula</TableCell>
-                            <TableCell>Correo</TableCell>
                             <TableCell>Teléfono</TableCell>
                             <TableCell>Título</TableCell>
                             <TableCell>Empresa</TableCell>
                             <TableCell>Tutor Académico</TableCell>
                             <TableCell>Tutor Empresarial</TableCell>
-                            <TableCell>Horas cumplidas</TableCell>
                             <TableCell>Estatus</TableCell>
                             <TableCell>Acciones</TableCell>
                         </TableRow>
@@ -112,13 +110,11 @@ const ServicioEstudiantes = () => {
                                 <TableCell>{index + 1}</TableCell>
                                 <TableCell>{`${studentData.name} ${studentData.lastname}`}</TableCell>
                                 <TableCell>{studentData.ci}</TableCell>
-                                <TableCell>{studentData.email}</TableCell>
                                 <TableCell>{studentData.phoneNumber}</TableCell>
                                 <TableCell>{studentServicio.title}</TableCell>
                                 <TableCell>{studentServicio.empresa}</TableCell>
                                 <TableCell>{studentServicio.tutorAcademico}</TableCell>
                                 <TableCell>{studentServicio.tutorEmpresarial}</TableCell>
-                                <TableCell>{studentServicio.hour}</TableCell>
                                 <TableCell>{studentServicio.estatus}</TableCell>
                                 <TableCell onContextMenu={(e) => handleContextMenu(e, request._id)}>
                                     <MoreVertIcon />

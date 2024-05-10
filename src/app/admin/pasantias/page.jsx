@@ -94,13 +94,11 @@ const PasantiasEstudiantes = () => {
               <TableCell>#</TableCell>
               <TableCell>Nombre y Apellido</TableCell>
               <TableCell>Cédula</TableCell>
-              <TableCell>Correo</TableCell>
               <TableCell>Teléfono</TableCell>
               <TableCell>Título</TableCell>
               <TableCell>Empresa</TableCell>
               <TableCell>Tutor Académico</TableCell>
               <TableCell>Tutor Empresarial</TableCell>
-              <TableCell>Horas cumplidas</TableCell>
               <TableCell>Estatus</TableCell>
               <TableCell>Acciones</TableCell>
             </TableRow>
@@ -111,13 +109,11 @@ const PasantiasEstudiantes = () => {
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{`${studentData.name} ${studentData.lastname}`}</TableCell>
                 <TableCell>{studentData.ci}</TableCell>
-                <TableCell>{studentData.email}</TableCell>
                 <TableCell>{studentData.phoneNumber}</TableCell>
                 <TableCell>{pasantiasData.title}</TableCell>
                 <TableCell>{pasantiasData.empresa}</TableCell>
                 <TableCell>{pasantiasData.tutorPasantias}</TableCell>
                 <TableCell>{pasantiasData.tutorEmpresarial}</TableCell>
-                <TableCell>{pasantiasData.hour}</TableCell>
                 <TableCell>{pasantiasData.status}</TableCell>
                 <TableCell onContextMenu={(e) => handleContextMenu(e, request._id)}>
                   <MoreVertIcon />
