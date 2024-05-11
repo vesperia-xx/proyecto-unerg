@@ -26,6 +26,8 @@ const links = [
   { text: 'Salir', icon: <LogoutIcon />, route: RouterLinks.student.StudentDashboard },
 ];
 
+const horasCumplir = 120
+
 const user = { name: 'Maria Diaz', avatarUrl: '/perfil.jpg' };
 
 const servicioActivities = [
@@ -157,6 +159,7 @@ const ServicioDashboard = () => {
             <Grid item xs={12}>
               <CustomBox>
                 <Typography variant="h6" gutterBottom>Horas</Typography>
+                <TitleValue title="Horas a Cumplir" value={horasCumplir} />
                 <TitleValue title="Total Acumulado" value={activities.reduce((total, activity) => total + parseInt(activity.hours), 0)} />
                 <TitleValue title="Estatus" value={student.estatus} />
               </CustomBox>

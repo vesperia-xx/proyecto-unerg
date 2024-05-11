@@ -31,6 +31,9 @@ const user = { name: 'Maria Diaz', avatarUrl: '/perfil.jpg' };
 // import { generarCartaCulminacionPDF } from './utils/pdfGenerator';
 
 //Constantes
+
+const horasCumplir = 320
+
 const pasantiasActivities = [
   {
     id: 'activity_1',
@@ -171,6 +174,7 @@ const PasantiasDashboard = () => {
             <Grid item xs={12}>
               <CustomBox>
                 <Typography variant="h6" gutterBottom>Horas</Typography>
+                <TitleValue title="Horas a Cumplir" value={horasCumplir} />
                 <TitleValue title="Total Acumulado" value={activities.reduce((total, activity) => total + parseInt(activity.hours), 0)} />
                 <TitleValue title="Estatus" value={student.estatus} />
               </CustomBox>
