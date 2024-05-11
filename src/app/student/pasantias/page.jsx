@@ -55,8 +55,8 @@ const studentData = {
   name: 'Maria',
   lastname: 'Diaz',
   ci: '30318748',
-  phoneNumber: '13213131',
-  email: 'maria@email',
+  phoneNumber: '04140416579',
+  email: 'maria@email.com',
 };
 
 const studentPasantias = {

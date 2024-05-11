@@ -36,20 +36,20 @@ const PasantiasEstudiantes = () => {
 
   const studentData = {
     id: 1,
-    name: 'Ricardo',
-    lastname: 'Aguilera',
-    ci: '12896748',
-    phoneNumber: '123-456-7890',
-    email: 'ricardo@example.com'
+    name: 'Maria',
+    lastname: 'Diaz',
+    ci: '30318748',
+    phoneNumber: '04140416579',
+    email: 'maria@example.com'
   };
 
   const pasantiasData = {
-    title: 'Título 1',
-    empresa: 'Empresa A',
-    tutorPasantias: 'Profesor X',
-    tutorEmpresarial: 'Ana',
-    hour: '4',
-    status: 'en progreso'
+    title: 'proyecto bigchungo',
+    empresa: 'FUPAGUA',
+    tutorPasantias: 'Adriana Roa',
+    tutorEmpresarial: 'Melissa Farfan',
+    hour: 0,
+    status: 'Pendiente'
   };
 
   const handleContextMenu = (event, id) => {

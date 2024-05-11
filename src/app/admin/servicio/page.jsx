@@ -40,7 +40,7 @@ const ServicioEstudiantes = () => {
         name: 'Maria',
         lastname: 'Diaz',
         ci: '30318748',
-        phoneNumber: '13213131',
+        phoneNumber: '04140416579',
         email: 'maria@email',
     };
 
