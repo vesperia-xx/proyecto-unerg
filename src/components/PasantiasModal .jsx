@@ -3,24 +3,26 @@ import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import { useForm } from "@/hooks/useForm";
+
+const pasantiasFormField = {
+    title: '',
+    empresa: '',
+    tutorAcademico: '',
+    tutorEmpresarial: '',
+}
 
 const PasantiasModal = ({ open, onClose }) => {
+    const { title, empresa, tutorAcademico, tutorEmpresarial, onInputChange} = useForm(pasantiasFormField);
     const [formData, setFormData] = useState({
         title: '',
         empresa: '',
-        tutorPasantias: '',
+        tutorAcademico: '',
         tutorEmpresarial: '',
     });
 
-    const handleInputChange = (event) => {
-        const { name, value } = event.target;
-        setFormData({ ...formData, [name]: value });
-    };
-
     const handleSave = () => {
-
-        console.log(formData);
-       
+        console.log({ title, empresa, tutorAcademico, tutorEmpresarial});
         onClose();
     };
 
@@ -34,32 +36,32 @@ const PasantiasModal = ({ open, onClose }) => {
                     label="Título"
                     fullWidth
                     name="title"
-                    value={formData.title}
-                    onChange={handleInputChange}
+                    value={title}
+                    onChange={onInputChange}
                     style={{ marginBottom: 20 }}
                 />
                 <TextField
                     label="Empresa"
                     fullWidth
                     name="empresa"
-                    value={formData.empresa}
-                    onChange={handleInputChange}
+                    value={empresa}
+                    onChange={onInputChange}
                     style={{ marginBottom: 20 }}
                 />
                 <TextField
-                    label="Tutor de Pasantías"
+                    label="Tutor Académico"
                     fullWidth
-                    name="tutorPasantias"
-                    value={formData.tutorPasantias}
-                    onChange={handleInputChange}
+                    name="tutorAcademico"
+                    value={tutorAcademico}
+                    onChange={onInputChange}
                     style={{ marginBottom: 20 }}
                 />
                 <TextField
                     label="Tutor Empresarial"
                     fullWidth
                     name="tutorEmpresarial"
-                    value={formData.tutorEmpresarial}
-                    onChange={handleInputChange}
+                    value={tutorEmpresarial}
+                    onChange={onInputChange}
                     style={{ marginBottom: 20 }}
                 />
                 <Button variant="contained" color="primary" fullWidth onClick={handleSave}>
