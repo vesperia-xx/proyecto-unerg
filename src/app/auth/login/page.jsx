@@ -1,19 +1,36 @@
 'use client';
 
-import React from "react";
+import React, { useEffect } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Button, CssBaseline, TextField, Link, Paper, Box, Grid, Typography } from "@mui/material";
 import Image from "next/image";
+import { useAuthStore } from "@/hooks/useAuthStore";
+import { useForm } from "@/hooks/useForm";
+import Swal from "sweetalert2";
+
+const loginFormFields = {
+  email: '',
+  password: '',
+}
 
 function SignInSide() {
+
+  const { email, password, onInputChange } = useForm(loginFormFields);
+  const { startLogin, errorMessage } = useAuthStore();
+  
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    startLogin({ email, password })
+    console.log({email,password})
   };
+
+  useEffect(() => {
+    if (errorMessage !== undefined) {
+        Swal.fire('Error en la autenticacion', errorMessage, 'error');
+        return;
+    }
+}, [errorMessage])
 
   // Define el tema personalizado
   const theme = createTheme();
@@ -78,7 +95,9 @@ function SignInSide() {
                   id="email"
                   label="Correo electronico"
                   name="email"
+                  value={email}
                   autoComplete="email"
+                  onChange={onInputChange}
                   autoFocus
                 />
                 <TextField
@@ -86,6 +105,8 @@ function SignInSide() {
                   required
                   fullWidth
                   name="password"
+                  value={password}
+                  onChange={onInputChange}
                   label="Contraseña"
                   type="password"
                   id="password"
