@@ -4,6 +4,7 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useForm } from "@/hooks/useForm";
+import Alert from "@mui/material/Alert"; 
 
 const pasantiasFormField = {
     title: '',
@@ -13,25 +14,31 @@ const pasantiasFormField = {
 }
 
 const PasantiasModal = ({ open, onClose }) => {
-    const { title, empresa, tutorAcademico, tutorEmpresarial, onInputChange} = useForm(pasantiasFormField);
-    const [formData, setFormData] = useState({
-        title: '',
-        empresa: '',
-        tutorAcademico: '',
-        tutorEmpresarial: '',
-    });
+    const { title, empresa, tutorAcademico, tutorEmpresarial, onInputChange } = useForm(pasantiasFormField);
+    const [openAlert, setOpenAlert] = useState(false); 
 
     const handleSave = () => {
-        console.log({ title, empresa, tutorAcademico, tutorEmpresarial});
+        if (!title || !empresa || !tutorAcademico || !tutorEmpresarial) {
+            setOpenAlert(true);
+            return;
+        }
+        
+        console.log({ title, empresa, tutorAcademico, tutorEmpresarial });
         onClose();
     };
 
     return (
         <Modal open={open} onClose={onClose}>
             <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, backgroundColor: '#ffffff', borderRadius: 8, boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', padding: 20 }}>
-                <Typography variant="h5" component="h2" gutterBottom style={{ marginBottom: 20, textAlign: 'center' }}>
-                    Crear Solicitud de Pasantías
-                </Typography>
+                
+            {openAlert && (
+                    <Alert severity="error" onClose={() => setOpenAlert(false)}>
+                        Por favor, complete todos los campos.
+                    </Alert>
+                )}
+                
+                <br />
+                
                 <TextField
                     label="Título"
                     fullWidth
@@ -39,6 +46,7 @@ const PasantiasModal = ({ open, onClose }) => {
                     value={title}
                     onChange={onInputChange}
                     style={{ marginBottom: 20 }}
+                    required
                 />
                 <TextField
                     label="Empresa"
@@ -47,6 +55,7 @@ const PasantiasModal = ({ open, onClose }) => {
                     value={empresa}
                     onChange={onInputChange}
                     style={{ marginBottom: 20 }}
+                    required
                 />
                 <TextField
                     label="Tutor Académico"
@@ -55,6 +64,7 @@ const PasantiasModal = ({ open, onClose }) => {
                     value={tutorAcademico}
                     onChange={onInputChange}
                     style={{ marginBottom: 20 }}
+                    required
                 />
                 <TextField
                     label="Tutor Empresarial"
@@ -63,6 +73,7 @@ const PasantiasModal = ({ open, onClose }) => {
                     value={tutorEmpresarial}
                     onChange={onInputChange}
                     style={{ marginBottom: 20 }}
+                    required
                 />
                 <Button variant="contained" color="primary" fullWidth onClick={handleSave}>
                     Guardar

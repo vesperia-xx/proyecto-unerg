@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import Alert from '@mui/material/Alert';
 
 const style = {
   display: 'flex',
@@ -29,6 +30,7 @@ const ModalActivityServicio = ({ open, onClose, onAddActivity, onEditActivity, e
     date: '',
     hours: ''
   });
+  const [alertMessage, setAlertMessage] = useState('');
 
   useEffect(() => {
     if (editedActivity) {
@@ -50,8 +52,7 @@ const ModalActivityServicio = ({ open, onClose, onAddActivity, onEditActivity, e
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    const numericValue = name === 'hours' || name === 'week' ? parseInt(value, 10) : value;
-    setActivityData({ ...activityData, [name]: numericValue });
+    setActivityData({ ...activityData, [name]: value });
   };
 
   const handleAction = () => {
@@ -63,8 +64,12 @@ const ModalActivityServicio = ({ open, onClose, onAddActivity, onEditActivity, e
       }
       onClose();
     } else {
-      alert('Por favor complete todos los campos.');
+      setAlertMessage('Por favor, complete todos los campos.');
     }
+  };
+
+  const handleCloseAlert = () => {
+    setAlertMessage('');
   };
 
   return (
@@ -74,8 +79,18 @@ const ModalActivityServicio = ({ open, onClose, onAddActivity, onEditActivity, e
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
+
+
+
       <Box sx={style}>
-        <form>
+        <form style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        
+        {alertMessage && (
+            <Alert severity="error" onClose={handleCloseAlert} style={{ width: '100%', marginTop: '10px' }}>
+              {alertMessage}
+            </Alert>
+          )}
+
           <TextField
             style={{ width: "200px", margin: "5px" }}
             type="text"
@@ -86,7 +101,6 @@ const ModalActivityServicio = ({ open, onClose, onAddActivity, onEditActivity, e
             onChange={handleChange}
             required
           />
-          <br />
           <TextField
             style={{ width: "200px", margin: "5px" }}
             type="number"
@@ -96,8 +110,8 @@ const ModalActivityServicio = ({ open, onClose, onAddActivity, onEditActivity, e
             value={activityData.week}
             onChange={handleChange}
             required
+            inputProps={{ min: "0" }}
           />
-          <br />
           <TextField
             style={{ width: "200px", margin: "5px" }}
             type="date"
@@ -109,7 +123,6 @@ const ModalActivityServicio = ({ open, onClose, onAddActivity, onEditActivity, e
             onChange={handleChange}
             required
           />
-          <br />
           <TextField
             style={{ width: "200px", margin: "5px" }}
             type="number"
@@ -119,13 +132,12 @@ const ModalActivityServicio = ({ open, onClose, onAddActivity, onEditActivity, e
             value={activityData.hours}
             onChange={handleChange}
             required
+            inputProps={{ min: "0" }}
           />
-          <br />
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '20px' }}>
-            <Button variant="contained" style={{ backgroundColor: '#4079ED', color: '#FFFFFF' }} onClick={handleAction}>
-              {editedActivity ? 'Editar' : 'Guardar'}
-            </Button>
-          </div>
+          
+          <Button variant="contained" style={{ backgroundColor: '#4079ED', color: '#FFFFFF', marginTop: '10px' }} onClick={handleAction}>
+            {editedActivity ? 'Editar' : 'Guardar'}
+          </Button>
         </form>
       </Box>
     </Modal>

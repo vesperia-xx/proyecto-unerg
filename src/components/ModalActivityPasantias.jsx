@@ -3,6 +3,9 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import Alert from '@mui/material/Alert';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
 const style = {
   display: 'flex',
@@ -29,6 +32,7 @@ const ModalActivityPasantias = ({ open, onClose, onAddActivity, onEditActivity, 
     endDate: '',
     hours: ''
   });
+  const [alertMessage, setAlertMessage] = useState(null);
 
   useEffect(() => {
     if (editedActivity) {
@@ -50,41 +54,39 @@ const ModalActivityPasantias = ({ open, onClose, onAddActivity, onEditActivity, 
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-    let numericValue = value;
 
-    // Si es el campo de horas y el valor no es un número, no actualices numericValue
-    if (name === 'hours' && isNaN(value)) {
+    if (name === 'hours' && (isNaN(value) || parseFloat(value) < 0)) {
       return;
     }
 
-    // Si es el campo de horas, convierte el valor a entero
+    let numericValue = value;
+
     if (name === 'hours') {
       numericValue = parseInt(value, 10);
     }
 
-    // Validar que la fecha de inicio no sea posterior a la fecha de fin
     if (name === 'startDate') {
       const endDate = new Date(activityData.endDate);
       const startDate = new Date(value);
 
       if (startDate > endDate) {
-        alert('La fecha de inicio no puede ser posterior a la fecha de fin.');
+        setAlertMessage('La fecha de inicio no puede ser posterior a la fecha de fin.');
         return;
       }
     }
 
-    // Validar que la fecha de fin no sea anterior a la fecha de inicio
     if (name === 'endDate') {
       const startDate = new Date(activityData.startDate);
       const endDate = new Date(value);
 
       if (endDate < startDate) {
-        alert('La fecha de fin no puede ser anterior a la fecha de inicio.');
+        setAlertMessage('La fecha de fin no puede ser anterior a la fecha de inicio.');
         return;
       }
     }
 
     setActivityData({ ...activityData, [name]: numericValue });
+    setAlertMessage(null); 
   };
 
   const handleAction = () => {
@@ -96,8 +98,12 @@ const ModalActivityPasantias = ({ open, onClose, onAddActivity, onEditActivity, 
       }
       onClose();
     } else {
-      alert('Por favor complete todos los campos.');
+      setAlertMessage('Por favor, complete todos los campos.');
     }
+  };
+
+  const handleCloseAlert = () => {
+    setAlertMessage(null);
   };
 
   return (
@@ -109,6 +115,22 @@ const ModalActivityPasantias = ({ open, onClose, onAddActivity, onEditActivity, 
     >
       <Box sx={style}>
         <form style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          
+        {alertMessage && (
+            <Alert severity="error" action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                onClick={handleCloseAlert}
+              >
+                <CloseIcon fontSize="inherit" />
+              </IconButton>
+            }>
+              {alertMessage}
+            </Alert>
+          )}
+          
           <TextField
             style={{ width: "200px", margin: "5px" }}
             type="text"
@@ -150,6 +172,7 @@ const ModalActivityPasantias = ({ open, onClose, onAddActivity, onEditActivity, 
             value={activityData.hours}
             onChange={handleChange}
             required
+            inputProps={{ min: "0" }} 
           />
           <Button variant="contained" style={{ backgroundColor: '#4079ED', color: '#FFFFFF', marginTop: '10px' }} onClick={handleAction}>
             {editedActivity ? 'Editar' : 'Guardar'}
@@ -161,3 +184,4 @@ const ModalActivityPasantias = ({ open, onClose, onAddActivity, onEditActivity, 
 };
 
 export default ModalActivityPasantias;
+
