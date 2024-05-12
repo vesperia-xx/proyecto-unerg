@@ -1,4 +1,3 @@
-
 import { getEnvVariables } from "@/helpers/getEnvVariables";
 import axios from "axios";
 
