@@ -1,17 +1,16 @@
 'use client';
-import Head from 'next/head';
 import { Provider } from 'react-redux';
 import { store } from '@/redux/store';
 
 const RootLayout = ({ children }) => {
-  const title = 'Demo App';
+  const title = 'UNERG-APP';
 
   return (
     <Provider store={store}>
       <html>
-        <Head>
+        <head>
           <title>{title}</title> 
-        </Head>
+        </head>
         <body>
           <div>
             <main>{children}</main>
