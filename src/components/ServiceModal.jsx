@@ -10,20 +10,20 @@ const serviceFormField = {
     title: '',
     empresa: '',
     tutorAcademico: '',
-    tutorEmpresarial: '',
+    tutorComunitario: '',
 }
 
 const ServiceModal = ({ open, onClose }) => {
-    const { title, empresa, tutorAcademico, tutorEmpresarial, onInputChange } = useForm(serviceFormField);
+    const { title, empresa, tutorAcademico, tutorComunitario, onInputChange } = useForm(serviceFormField);
     const [openAlert, setOpenAlert] = useState(false); 
 
     const handleSave = () => {
-        if (!title || !empresa || !tutorAcademico || !tutorEmpresarial) {
+        if (!title || !empresa || !tutorAcademico || !tutorComunitario) {
             setOpenAlert(true); 
             return;
         }
         
-        console.log({ title, empresa, tutorAcademico, tutorEmpresarial });
+        console.log({ title, empresa, tutorAcademico, tutorComunitario });
         onClose();
     };
 
@@ -67,10 +67,10 @@ const ServiceModal = ({ open, onClose }) => {
                     required
                 />
                 <TextField
-                    label="Tutor Empresarial"
+                    label="tutor Comunitario"
                     fullWidth
-                    name="tutorEmpresarial"
-                    value={tutorEmpresarial}
+                    name="tutorComunitario"
+                    value={tutorComunitario}
                     onChange={onInputChange}
                     style={{ marginBottom: 20 }}
                     required

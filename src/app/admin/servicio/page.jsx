@@ -48,7 +48,7 @@ const ServicioEstudiantes = () => {
         title: 'proyecto bigchungo',
         empresa: 'FUPAGUA',
         tutorAcademico: 'Adriana Roa',
-        tutorEmpresarial: 'Melissa Farfan',
+        tutorComunitario: 'Melissa Farfan',
         hour: 0,
         estatus: 'Pendiente'
     };
@@ -98,7 +98,7 @@ const ServicioEstudiantes = () => {
                             <TableCell>Título</TableCell>
                             <TableCell>Empresa</TableCell>
                             <TableCell>Tutor Académico</TableCell>
-                            <TableCell>Tutor Empresarial</TableCell>
+                            <TableCell>tutor Comunitario</TableCell>
                             <TableCell>Estatus</TableCell>
                             <TableCell>Acciones</TableCell>
                         </TableRow>
@@ -114,7 +114,7 @@ const ServicioEstudiantes = () => {
                                 <TableCell>{studentServicio.title}</TableCell>
                                 <TableCell>{studentServicio.empresa}</TableCell>
                                 <TableCell>{studentServicio.tutorAcademico}</TableCell>
-                                <TableCell>{studentServicio.tutorEmpresarial}</TableCell>
+                                <TableCell>{studentServicio.tutorComunitario}</TableCell>
                                 <TableCell>{studentServicio.estatus}</TableCell>
                                 <TableCell onContextMenu={(e) => handleContextMenu(e, request._id)}>
                                     <MoreVertIcon />

@@ -59,7 +59,7 @@ const studentServicio = {
   title: 'proyecto bigchungo',
   empresa: 'FUPAGUA',
   tutorAcademico: 'Adriana Roa',
-  tutorEmpresarial: 'Melissa Farfan',
+  tutorComunitario: 'Melissa Farfan',
   hour: 0,
   estatus: 'Pendiente'
 };
@@ -148,7 +148,7 @@ const ServicioDashboard = () => {
                 <TitleValue title="Cedula" value={studentData.ci} />
                 <TitleValue title="Empresa" value={student.empresa} />
                 <TitleValue title="Tutor Academico" value={student.tutorAcademico} />
-                <TitleValue title="Tutor Empresarial" value={student.tutorEmpresarial} />
+                <TitleValue title="tutor Comunitario" value={student.tutorComunitario} />
               </CustomBox>
             </Grid>
           </Grid>
