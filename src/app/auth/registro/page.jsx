@@ -3,49 +3,32 @@
 import React from 'react';
 import { createTheme, ThemeProvider, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container } from '@mui/material';
 import Image from 'next/image';
+import { useAuthStore } from '@/hooks/useAuthStore';
+import { useForm } from '@/hooks/useForm';
 
 // Define el tema personalizado
 const theme = createTheme();
 
-function onlyNumbers(str) {
-  return str.replace(/\D/g, '');
-}
-
-function validatePhoneNumber(phoneNumber) {
-  const onlyDigits = onlyNumbers(phoneNumber);
-  // Validar que el número tenga el formato correcto (58 seguido de al menos 10 dígitos)
-  return /^58\d{10,}$/.test(onlyDigits);
-}
-
-function validateEmail(email) {
-  // Validar que el correo tenga el formato correcto
-  return /\S+@\S+\.\S+/.test(email);
-}
-
-function handleSubmit(event) {
-  event.preventDefault();
-  const data = new FormData(event.currentTarget);
-  const phoneNumber = data.get('phoneNumber');
-  if (!validatePhoneNumber(phoneNumber)) {
-    alert('Por favor, ingrese un número de teléfono válido.');
-    return;
-  }
-  const email = data.get('email');
-  if (!validateEmail(email)) {
-    alert('Por favor, ingrese un correo electrónico válido.');
-    return;
-  }
-  console.log({
-    name: data.get('firstName'),
-    lastname: data.get('lastName'),
-    ci: data.get('ci'),
-    phoneNumber,
-    email,
-    password: data.get('password'),
-  });
+const registerFormFields = {
+  name: '',
+  lastName: '',
+  CI: '',
+  phoneNumber: '',
+  email: '',
+  image: '',
+  password: '',
 }
 
 export default function SignUp() {
+
+  const { startRegister } = useAuthStore()
+  const { email, lastName, name, CI, phoneNumber, password, image, onInputChange } = useForm(registerFormFields);
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    startRegister({ name, email, password, lastName, CI, phoneNumber })
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -70,8 +53,9 @@ export default function SignUp() {
                   name="name"
                   required
                   fullWidth
-                  id="firstName"
+                  value={name}
                   label="Nombres"
+                  onChange={onInputChange}
                   autoFocus
                 />
               </Grid>
@@ -79,9 +63,10 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
-                  id="lastName"
+                  value={lastName}
                   label="Apellidos"
                   name="lastName"
+                  onChange={onInputChange}
                   autoComplete="family-name"
                 />
               </Grid>
@@ -89,18 +74,20 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
-                  id="ci"
+                  value={CI}
                   label="Cédula"
-                  name="ci"
+                  name="CI"
+                  onChange={onInputChange}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
-                  id="phoneNumber"
+                  value={phoneNumber}
                   label="Número de Teléfono"
                   name="phoneNumber"
+                  onChange={onInputChange}
                   InputProps={{
                     inputProps: { pattern: '[0-9]*' },
                   }}
@@ -110,9 +97,10 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
-                  id="email"
+                  value={email}
                   label="Correo Electrónico"
                   name="email"
+                  onChange={onInputChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -122,7 +110,8 @@ export default function SignUp() {
                   name="password"
                   label="Contraseña"
                   type="password"
-                  id="password"
+                  value={password}
+                  onChange={onInputChange}
                   autoComplete="new-password"
                 />
               </Grid>

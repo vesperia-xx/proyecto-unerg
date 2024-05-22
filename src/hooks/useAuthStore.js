@@ -30,10 +30,10 @@ export const useAuthStore = () => {
 
     }
 
-    const startRegister = async ({ name, email, password }) => {
+    const startRegister = async ({ email, lastName, name, CI, phoneNumber, password, image }) => {
         dispatch(onChecking());
         try {
-            const { data } = await unergApi.post('/auth/new', { name, email, password});
+            const { data } = await unergApi.post('http://localhost:4000/api/auth/new', { email, lastName, name, CI, phoneNumber, password, image });
             localStorage.setItem('token', data.token);
             localStorage.setItem('token-init-date', new Date().getTime());
             dispatch(onLogin({ name: data.name, uid: data.uid }));
@@ -49,18 +49,18 @@ export const useAuthStore = () => {
 
     }
 
-    const checkAuthToken = async() => {
+    const checkAuthToken = async () => {
         const token = localStorage.getItem('token');
-        if ( !token ) return dispatch( onLogout() );
+        if (!token) return dispatch(onLogout());
 
         try {
-            const { data } = await unergApi.get('auth/renew');
-            localStorage.setItem('token', data.token );
-            localStorage.setItem('token-init-date', new Date().getTime() );
-            dispatch( onLogin({ name: data.name, uid: data.uid }) );
+            const { data } = await unergApi.get('http://localhost:4000/api/auth/renew');
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('token-init-date', new Date().getTime());
+            dispatch(onLogin({ name: data.name, uid: data.uid }));
         } catch (error) {
             localStorage.clear();
-            dispatch( onLogout() );
+            dispatch(onLogout());
         }
     }
 
