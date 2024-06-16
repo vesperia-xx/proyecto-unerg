@@ -20,13 +20,16 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import ArticleIcon from "@mui/icons-material/Article";
 import LogoutIcon from '@mui/icons-material/Logout';
 
+import { generateQRCode } from "@/components/GenerateQRCode";
+import { createPDF } from "@/components/CreatePDF";
+
 const links = [
   { text: 'Seguimiento', icon: <DashboardIcon />, route: RouterLinks.student.servicio.ServicioDashboard },
   { text: 'Documentos', icon: <ArticleIcon />, route: RouterLinks.student.servicio.ServicioDocument },
   { text: 'Salir', icon: <LogoutIcon />, route: RouterLinks.student.StudentDashboard },
 ];
 
-const horasCumplir = 120
+const horasCumplir = 120;
 
 const user = { name: 'Maria Diaz', avatarUrl: '/perfil.jpg' };
 
@@ -65,13 +68,15 @@ const studentServicio = {
 };
 
 const ServicioDashboard = () => {
-  const [activities, setActivities] = useState(servicioActivities); // Changed pasantiasActivities to servicioActivities
+  const [activities, setActivities] = useState(servicioActivities);
   const [student, setStudent] = useState(studentServicio);
   const [totalHours, setTotalHours] = useState(studentServicio.hour);
   const [openModal, setOpenModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [editedActivity, setEditedActivity] = useState(null);
   const [canDownload, setCanDownload] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState(null);
+  const [previewOpen, setPreviewOpen] = useState(false);
 
   useEffect(() => {
     const newTotalHours = activities.reduce((total, activity) => total + (+activity.hours), 0);
@@ -131,6 +136,30 @@ const ServicioDashboard = () => {
     setOpenEditModal(false);
   };
 
+  const handlePreviewPDF = async () => {
+    try {
+      const qrCodeDataUrl = await generateQRCode(`Nombre: ${studentData.name} ${studentData.lastname}\nCI: ${studentData.ci}\nTotal Horas: ${totalHours}`);
+      const pdfBytes = await createPDF(qrCodeDataUrl);
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      setPdfUrl(url);
+      setPreviewOpen(true);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+    }
+  };
+
+  const handleDownloadPDF = () => {
+    const link = document.createElement('a');
+    link.href = pdfUrl;
+    link.download = 'Carta_de_Culminacion.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(pdfUrl);
+    setPreviewOpen(false);
+  };
+
   return (
     <PageTemplate>
       <Sidebar title="Estudiante Servicio" links={links}
@@ -148,7 +177,7 @@ const ServicioDashboard = () => {
                 <TitleValue title="Cedula" value={studentData.ci} />
                 <TitleValue title="Empresa" value={student.empresa} />
                 <TitleValue title="Tutor Academico" value={student.tutorAcademico} />
-                <TitleValue title="tutor Comunitario" value={student.tutorComunitario} />
+                <TitleValue title="Tutor Comunitario" value={student.tutorComunitario} />
               </CustomBox>
             </Grid>
           </Grid>
@@ -171,10 +200,10 @@ const ServicioDashboard = () => {
               variant="outlined"
               style={{ color: '#47AD64', borderColor: '#47AD64', textTransform: 'none' }}
               startIcon={<GetAppIcon style={{ color: '#47AD64' }} />}
-              // onClick={handleDownloadCompletionLetter} 
+              onClick={handlePreviewPDF}
               disabled={!canDownload}
             >
-              Decargar carta de culminación
+              Descargar carta de culminación
             </Button>
           </div>
 
