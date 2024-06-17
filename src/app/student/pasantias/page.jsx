@@ -181,17 +181,6 @@ const PasantiasDashboard = () => {
             </Grid>
           </Grid>
 
-          <div style={{ marginTop: 20, textAlign: 'center' }}>
-            <Button
-              variant="outlined"
-              style={{ color: '#47AD64', borderColor: '#47AD64', textTransform: 'none' }}
-              startIcon={<GetAppIcon style={{ color: '#47AD64' }} />}
-              // onClick={handleDownloadCompletionLetter} 
-              disabled={!canDownload}
-            >
-              Decargar carta de culminación
-            </Button>
-          </div>
 
         </Grid>
       </Grid>

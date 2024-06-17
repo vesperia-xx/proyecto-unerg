@@ -7,12 +7,21 @@ export const createPDF = (qrCodeImageUrl) => {
         format: 'a4'
     });
 
-    const margin = 2.5; // Margen en cm
+    const margin = 2.5;
+
+    var img2 = new Image();
+    img2.src = 'https://pbs.twimg.com/profile_images/1211703453736722432/gVVrcbrS_400x400.jpg';
+    doc.addImage(img2, 'PNG', margin, margin, 3, 3);
 
     // Header
     doc.setFont('helvetica');
-    doc.setFontSize(12);
-    doc.text(`REPÚBLICA BOLIVARIANA DE VENEZUELA\nMINISTERIO DEL PODER POPULAR PARA LA EDUCACIÓN UNIVERSITARIA,\nCIENCIA Y TECNOLOGÍA\nUNIVERSIDAD NACIONAL EXPERIMENTAL “RÓMULO GALLEGOS”\nVICERRECTORADO ACADÉMICO\nÁREA DE INGENIERÍA DE SISTEMAS\nCOORDINACIÓN SERVICIO COMUNITARIO (COSECA)`, 8 + margin, margin, { align: 'center' });
+    doc.setFontSize(8);
+
+    var img1 = new Image();
+    img1.src = 'https://pbs.twimg.com/profile_images/1315726857/AIS_400x400.jpg';
+    doc.addImage(img1, 'PNG', doc.internal.pageSize.width - 2 - margin, 0.5 + margin, 2, 2);
+
+    doc.text(`REPÚBLICA BOLIVARIANA DE VENEZUELA\nMINISTERIO DEL PODER POPULAR PARA LA EDUCACIÓN UNIVERSITARIA,\nCIENCIA Y TECNOLOGÍA\nUNIVERSIDAD NACIONAL EXPERIMENTAL “RÓMULO GALLEGOS”\nVICERRECTORADO ACADÉMICO\nÁREA DE INGENIERÍA DE SISTEMAS\nCOORDINACIÓN SERVICIO COMUNITARIO (COSECA)`, 8.5 + margin, margin, { align: 'center' });
 
     // Título
     doc.setFontSize(16);
@@ -43,7 +52,6 @@ export const createPDF = (qrCodeImageUrl) => {
     doc.text('COORDINADOR (A) COSECA AIS', 8.5, 23 + margin - 5);
     doc.text('DECANO (A)', 16, 23 + margin - 6);
 
-
     // Texto adicional
     const additionalText = `Folio ______   Número ______`;
     doc.text(additionalText, margin, doc.internal.pageSize.height - margin - 5);
@@ -55,7 +63,7 @@ export const createPDF = (qrCodeImageUrl) => {
     // Calcular posición para el código QR
     const qrWidth = 3;
     const qrHeight = 3;
-    const qrX = margin; // Alineado con el margen izquierdo
+    const qrX = margin; 
     const qrY = doc.internal.pageSize.height - margin - qrHeight - 1;
 
     // Añadir código QR
