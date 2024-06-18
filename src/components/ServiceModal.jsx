@@ -67,7 +67,7 @@ const ServiceModal = ({ open, onClose }) => {
                     required
                 />
                 <TextField
-                    label="tutor Comunitario"
+                    label="Tutor Comunitario"
                     fullWidth
                     name="tutorComunitario"
                     value={tutorComunitario}

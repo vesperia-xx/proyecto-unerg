@@ -166,11 +166,8 @@ const handleDownloadActa = async () => {
   } catch (error) {
     console.error('Error generating Acta PDF:', error);
   }
+  
 };
-
-  const handleDownloadCartaCulminacion = () => {
-    window.open(pdfUrl, '_blank');
-  };
 
   return (
     <PageTemplate>
@@ -212,7 +209,7 @@ const handleDownloadActa = async () => {
           <div style={{ marginTop: 20, textAlign: 'center' }}>
             <Button
               variant="outlined"
-              style={{ color: '#47AD64', borderColor: '#47AD64', textTransform: 'none' }}
+              style={{ color: '#47AD64', borderColor: '#47AD64', textTransform: 'none'}}
               startIcon={<GetAppIcon style={{ color: '#47AD64' }} />}
               onClick={handlePreviewPDF}
               disabled={!canDownloadCarta}
@@ -221,7 +218,7 @@ const handleDownloadActa = async () => {
             </Button>
             </div>
 
-            <div style={{ marginTop: 20, textAlign: 'center' }}>
+            <div style={{ marginTop: 20, textAlign: 'center'}}>
             <Button
               variant="outlined"
               style={{ color: '#4079ED', borderColor: '#4079ED', textTransform: 'none'}}
@@ -230,7 +227,7 @@ const handleDownloadActa = async () => {
               onClick={handleDownloadActa}
               disabled={!canDownloadCarta}
             >
-              Descargar acta de conlusión
+                 Descargar acta de conclusión 
             </Button>
           </div>
 

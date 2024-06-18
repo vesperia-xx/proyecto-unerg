@@ -33,26 +33,12 @@ const documentServicio = [
   { id: 3, name: 'ADSCRIPCIÓN AL ESTUDIANTE AL SERVICIO COMUNITARIO', url: '/pdf/AdscripcionEstudiante.pdf' },
 ];
 
-const ServicioDocument = () => {
-  const [previewOpen, setPreviewOpen] = useState(false);
-  const [pdfUrl, setPdfUrl] = useState('');
-
-  const handleDownloadPDF = async (url) => {
-    try {
-      const response = await fetch(url);
-      const blob = await response.blob();
-      const downloadUrl = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = downloadUrl;
-      link.download = url.split('/').pop();
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      URL.revokeObjectURL(downloadUrl);
-    } catch (error) {
-      console.error('Error downloading PDF:', error);
-    }
-  };
+ const ServicioDocument = () => {
+    // Función para manejar la descarga 
+    const handleDownloadPDF = (url) => {
+      // lógica para descargar 
+      window.open(url, '_blank');
+    };
 
   return (
     <PageTemplate>
@@ -78,7 +64,7 @@ const ServicioDocument = () => {
                 <TableCell>{doc.name}</TableCell>
                 <TableCell align="center">
 
-                  <IconButton
+                <IconButton
                     onClick={() => handleDownloadPDF(doc.url)}
                     aria-label="download PDF"
                     sx={{ color: '#444A6D' }}

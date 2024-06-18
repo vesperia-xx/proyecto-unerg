@@ -10,7 +10,6 @@ import Sidebar from "@/components/Sidebar";
 import RouterLinks from "@/routes/RouterLinks";
 
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
-import ArticleIcon from "@mui/icons-material/Article";
 import LogoutIcon from '@mui/icons-material/Logout';
 
 const links = [

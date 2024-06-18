@@ -10,7 +10,6 @@ import Sidebar from "@/components/Sidebar";
 import RouterLinks from "@/routes/RouterLinks";
 
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
-import ArticleIcon from "@mui/icons-material/Article";
 import LogoutIcon from '@mui/icons-material/Logout';
 
 // Importar aquí la lógica para interactuar con la tabla InscriptionRequest según tu entorno y herramientas (por ejemplo, Axios, GraphQL, etc.)
@@ -97,7 +96,7 @@ const ServicioEstudiantes = () => {
                             <TableCell>Título</TableCell>
                             <TableCell>Empresa</TableCell>
                             <TableCell>Tutor Académico</TableCell>
-                            <TableCell>tutor Comunitario</TableCell>
+                            <TableCell>Tutor Comunitario</TableCell>
                             <TableCell>Estatus</TableCell>
                             <TableCell>Acciones</TableCell>
                         </TableRow>
