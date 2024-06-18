@@ -29,9 +29,10 @@ const links = [
 ];
 
 const documentPasantias = [
-  { id: 1, name: 'Documento 1', url: '/path/to/document1.pdf' },
-  { id: 2, name: 'Documento 2', url: '/path/to/document2.pdf' },
-  { id: 3, name: 'Documento 3', url: '/path/to/document3.pdf' },
+  { id: 1, name: 'ACTA DE VISITA PASANTE', url: '/pdf/ActaVisitaPasante.pdf' },
+  { id: 2, name: 'EVALUACIÓN TUTOR EMPRESARIAL', url: '/pdf/EVALUACIÓNTutorEmpresarial.pdf'},
+  { id: 3, name: 'EVALUACIÓN TUTOR ACADÉMICO', url: '/pdf/EVALUACIÓNTutorAcadémico.pdf' },
+  { id: 3, name: 'EVALUACIÓN TUTOR COORDINACIÓN', url: '/pdf/EVALUACIÓNCoordinación.pdf' },
 ];
 
 const pasantiasDocument = () => {

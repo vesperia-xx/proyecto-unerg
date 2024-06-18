@@ -19,11 +19,9 @@ const RouterLinks = {
 	admin: {
 		pasantias: {
 			PasantiasEstudiantes: "/admin/pasantias",
-			PasantiasDocsAdd: "/admin/pasantias/document",
 		},
 		servicio: {
 			ServicioEstudiantes: "/admin/servicio",
-			ServcioDocsAdd: "/admin/servicio/document",
 		},
 	},
 };

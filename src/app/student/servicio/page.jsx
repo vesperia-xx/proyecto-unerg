@@ -1,27 +1,22 @@
 'use client';
-
 import React, { useState, useEffect } from "react";
 import PageTemplate from "@/components/PageTemplate";
 import CustomBox from "@/components/CustomBox";
 import TitleValue from "@/components/TitleValue";
 import ModalActivityServicio from "@/components/ModalActivityServicio";
 import ContextMenu from "@/components/ContextMenu";
-
 import { Add as AddIcon, GetApp as GetAppIcon } from '@mui/icons-material';
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import { Grid, Typography, Button } from '@mui/material';
 import TableStyled from "@/components/TableStyled";
-
 import Sidebar from "@/components/Sidebar";
-
 import RouterLinks from "@/routes/RouterLinks";
-
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ArticleIcon from "@mui/icons-material/Article";
 import LogoutIcon from '@mui/icons-material/Logout';
-
 import { generateQRCode } from "@/components/GenerateQRCode";
 import { createPDF } from "@/components/CreatePDF";
+import { ActaPDF } from "@/components/ActaPDF";
 
 const links = [
   { text: 'Seguimiento', icon: <DashboardIcon />, route: RouterLinks.student.servicio.ServicioDashboard },
@@ -74,7 +69,7 @@ const ServicioDashboard = () => {
   const [openModal, setOpenModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [editedActivity, setEditedActivity] = useState(null);
-  const [canDownload, setCanDownload] = useState(false);
+  const [canDownloadCarta, setCanDownloadCarta] = useState(false);
   const [pdfUrl, setPdfUrl] = useState(null);
   const [previewOpen, setPreviewOpen] = useState(false);
 
@@ -82,9 +77,9 @@ const ServicioDashboard = () => {
     const newTotalHours = activities.reduce((total, activity) => total + (+activity.hours), 0);
     setTotalHours(newTotalHours);
     if (newTotalHours >= 120) {
-      setCanDownload(true);
+      setCanDownloadCarta(true);
     } else {
-      setCanDownload(false);
+      setCanDownloadCarta(false);
     }
     if (newTotalHours >= 120 && student.estatus !== 'Completado') {
       setStudent(prevStudent => ({ ...prevStudent, estatus: 'Completado' }));
@@ -140,29 +135,48 @@ const ServicioDashboard = () => {
     try {
       const qrCodeDataUrl = await generateQRCode(`Nombre: ${studentData.name} ${studentData.lastname}\nCI: ${studentData.ci}\nTotal Horas: ${totalHours}`);
       const pdfBytes = await createPDF(qrCodeDataUrl);
-      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-      const url = URL.createObjectURL(blob);
-      setPdfUrl(url);
-      setPreviewOpen(true);
+      if (pdfBytes instanceof Blob) {
+        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+        setPdfUrl(url);
+        setPreviewOpen(true);
+      } else {
+        console.error('Error: PDF creation returned invalid data.');
+      }
     } catch (error) {
       console.error('Error generating PDF:', error);
     }
   };
+  
+  const generateActaPDF = async () => {
+    try {
+        const actaContent = `Acta de servicio:\nNombre: ${studentData.name} ${studentData.lastname}\nCI: ${studentData.ci}\nTotal Horas: ${totalHours}`;
+        const pdfBytes = await ActaPDF(actaContent); // Llamar al componente ActaPDF para generar el PDF
+        return pdfBytes;
+    } catch (error) {
+        console.error('Error generating Acta PDF:', error);
+        throw error; // Manejo de errores
+    }
+};
 
-  const handleDownloadPDF = () => {
-    const link = document.createElement('a');
-    link.href = pdfUrl;
-    link.download = 'Carta_de_Culminacion.pdf';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(pdfUrl);
-    setPreviewOpen(false);
+const handleDownloadActa = async () => {
+  try {
+    const qrCodeDataUrl = await generateQRCode(`Nombre: ${user.name}\nTotal Horas: 100`);
+    ActaPDF(qrCodeDataUrl);
+  } catch (error) {
+    console.error('Error generating Acta PDF:', error);
+  }
+};
+
+  const handleDownloadCartaCulminacion = () => {
+    window.open(pdfUrl, '_blank');
   };
 
   return (
     <PageTemplate>
-      <Sidebar title="Estudiante Servicio" links={links}
+      <Sidebar
+        title="Estudiante Servicio"
+        links={links}
         profileName={user.name}
         profileImage={user.avatarUrl}
       />
@@ -201,14 +215,28 @@ const ServicioDashboard = () => {
               style={{ color: '#47AD64', borderColor: '#47AD64', textTransform: 'none' }}
               startIcon={<GetAppIcon style={{ color: '#47AD64' }} />}
               onClick={handlePreviewPDF}
-              disabled={!canDownload}
+              disabled={!canDownloadCarta}
             >
               Descargar carta de culminación
+            </Button>
+            </div>
+
+            <div style={{ marginTop: 20, textAlign: 'center' }}>
+            <Button
+              variant="outlined"
+              style={{ color: '#4079ED', borderColor: '#4079ED', textTransform: 'none'}}
+              color="primary"
+              startIcon={<GetAppIcon />}
+              onClick={handleDownloadActa}
+              disabled={!canDownloadCarta}
+            >
+              Descargar acta de conlusión
             </Button>
           </div>
 
         </Grid>
       </Grid>
+
       <Grid container spacing={1} style={{ marginBottom: 10, marginTop: 10 }}>
         <Grid item xs={12}>
           <CustomBox>
@@ -225,7 +253,7 @@ const ServicioDashboard = () => {
           color="primary"
           startIcon={<AddIcon />}
           onClick={handleOpenModal}
-          disabled={student.estatus === 'Completado' || canDownload}
+          disabled={student.estatus === 'Completado' || canDownloadCarta}
         >
           Agregar nueva actividad
         </Button>
@@ -257,7 +285,7 @@ const ServicioDashboard = () => {
                   <ContextMenu
                     onDelete={() => handleDeleteActivity(activity.id)}
                     onEdit={() => handleEditActivity(activity.id)}
-                    canDownload={canDownload}
+                    canDownload={canDownloadCarta}
                     studentStatus={student.estatus}
                   />
                 </TableCell>
@@ -274,3 +302,4 @@ const ServicioDashboard = () => {
 };
 
 export default ServicioDashboard;
+

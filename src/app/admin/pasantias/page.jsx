@@ -15,7 +15,6 @@ import LogoutIcon from '@mui/icons-material/Logout';
 
 const links = [
   { text: 'Estudiantes', icon: <PeopleAltIcon />, route: RouterLinks.admin.pasantias.PasantiasEstudiantes },
-  { text: 'Documentos', icon: <ArticleIcon />, route: RouterLinks.admin.pasantias.PasantiasDocsAdd},
   { text: 'Salir', icon: <LogoutIcon />, route: "/" },
 ];
 

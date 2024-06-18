@@ -1,6 +1,6 @@
 'use client';
-import React from "react";
-import PageTemplate from "@/components/PageTemplate";
+import React, { useState } from 'react';
+import PageTemplate from '@/components/PageTemplate';
 
 import IconButton from '@mui/material/IconButton';
 import GetAppIcon from '@mui/icons-material/GetApp';
@@ -10,14 +10,13 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import TableStyled from "@/components/TableStyled";
+import TableStyled from '@/components/TableStyled';
 
-import Sidebar from "@/components/Sidebar";
-
-import RouterLinks from "@/routes/RouterLinks";
+import Sidebar from '@/components/Sidebar';
+import RouterLinks from '@/routes/RouterLinks';
 
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import ArticleIcon from "@mui/icons-material/Article";
+import ArticleIcon from '@mui/icons-material/Article';
 import LogoutIcon from '@mui/icons-material/Logout';
 
 const links = [
@@ -29,21 +28,37 @@ const links = [
 const user = { name: 'Maria Diaz', avatarUrl: '/perfil.jpg' };
 
 const documentServicio = [
-  { id: 1, name: 'Documento 1', url: '/path/to/document1.pdf' },
-  { id: 2, name: 'Documento 2', url: '/path/to/document2.pdf' },
-  { id: 3, name: 'Documento 3', url: '/path/to/document3.pdf' },
+  { id: 1, name: 'CONSTANCIA APROBACIÓN TALLER SERVICIO COMUNITARIO', url: '/pdf/ConstanciaAprobacion.pdf' },
+  { id: 2, name: 'REGISTRO DE ACTIVIDADES, SEGUIMIENTO Y CONTROL DE ASISTENCIA', url: '/pdf/RegistroActividades.pdf' },
+  { id: 3, name: 'ADSCRIPCIÓN AL ESTUDIANTE AL SERVICIO COMUNITARIO', url: '/pdf/AdscripcionEstudiante.pdf' },
 ];
 
-const servicioDocument = () => {
-  // Función para manejar la descarga 
-  const handleDownloadPDF = (url) => {
-    // lógica para descargar 
-    window.open(url, '_blank');
+const ServicioDocument = () => {
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState('');
+
+  const handleDownloadPDF = async (url) => {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const downloadUrl = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = url.split('/').pop();
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(downloadUrl);
+    } catch (error) {
+      console.error('Error downloading PDF:', error);
+    }
   };
 
   return (
     <PageTemplate>
-      <Sidebar title="Documentos" links={links}
+      <Sidebar
+        title="Documentos"
+        links={links}
         profileName={user.name}
         profileImage={user.avatarUrl}
       />
@@ -62,6 +77,7 @@ const servicioDocument = () => {
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{doc.name}</TableCell>
                 <TableCell align="center">
+
                   <IconButton
                     onClick={() => handleDownloadPDF(doc.url)}
                     aria-label="download PDF"
@@ -80,4 +96,7 @@ const servicioDocument = () => {
   );
 };
 
-export default servicioDocument;
+export default ServicioDocument;
+
+
+
