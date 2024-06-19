@@ -4,41 +4,62 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { useForm } from "@/hooks/useForm";
-import Alert from "@mui/material/Alert"; 
+import Alert from "@mui/material/Alert";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import Swal from "sweetalert2";
 
 const pasantiasFormField = {
     title: '',
     empresa: '',
     tutorAcademico: '',
     tutorEmpresarial: '',
-}
+};
 
-const PasantiasModal = ({ open, onClose }) => {
+const PasantiasModal = ({ open, onClose, onRegister }) => {
     const { title, empresa, tutorAcademico, tutorEmpresarial, onInputChange } = useForm(pasantiasFormField);
-    const [openAlert, setOpenAlert] = useState(false); 
+    const [openAlert, setOpenAlert] = useState(false);
+    const [showConfirmation, setShowConfirmation] = useState(false);
 
     const handleSave = () => {
         if (!title || !empresa || !tutorAcademico || !tutorEmpresarial) {
             setOpenAlert(true);
             return;
         }
-        
+
         console.log({ title, empresa, tutorAcademico, tutorEmpresarial });
-        onClose();
+
+        setTimeout(() => {
+            Swal.fire({
+                icon: 'success',
+                title: 'Registro exitoso',
+                text: 'Te has registrado a las pasantias correctamente.',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    onRegister();
+                    onClose();
+                }
+            });
+        }, 500);
     };
 
     return (
         <Modal open={open} onClose={onClose}>
-            <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, backgroundColor: '#ffffff', borderRadius: 8, boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', padding: 20 }}>
-                
-            {openAlert && (
-                    <Alert severity="error" onClose={() => setOpenAlert(false)}>
-                        Por favor, complete todos los campos.
-                    </Alert>
-                )}
-                
-                <br />
-                
+              <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, backgroundColor: '#ffffff', borderRadius: 8, boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', padding: 20 }}>
+
+{openAlert && (
+    <Alert severity="error" onClose={() => setOpenAlert(false)}>
+        Por favor, complete todos los campos.
+    </Alert>
+)}
+
+{showConfirmation && (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
+        <CheckCircleIcon style={{ color: 'green', marginRight: 10 }} />
+        <Typography variant="body1" style={{ color: 'green' }}>
+            Guardado exitoso
+        </Typography>
+    </div>
+)}
                 <TextField
                     label="Título"
                     fullWidth
@@ -84,3 +105,8 @@ const PasantiasModal = ({ open, onClose }) => {
 };
 
 export default PasantiasModal;
+
+
+
+
+
