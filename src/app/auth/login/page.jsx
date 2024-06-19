@@ -7,6 +7,7 @@ import Image from "next/image";
 import { useAuthStore } from "@/hooks/useAuthStore";
 import { useForm } from "@/hooks/useForm";
 import Swal from "sweetalert2";
+import { redirect } from "next/navigation";
 
 const loginFormFields = {
   email: '',
@@ -16,8 +17,16 @@ const loginFormFields = {
 function SignInSide() {
 
   const { email, password, onInputChange } = useForm(loginFormFields);
-  const { startLogin, errorMessage } = useAuthStore();
+  const { startLogin, errorMessage, status, user } = useAuthStore();
   
+  useEffect(() => { 
+    if (status === 'authenticated') { 
+
+
+        redirect("/student"); 
+
+    } 
+  }, [status, user]);
 
   const handleSubmit = (event) => {
     event.preventDefault();

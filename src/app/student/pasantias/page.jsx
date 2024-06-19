@@ -19,18 +19,13 @@ import RouterLinks from "@/routes/RouterLinks";
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ArticleIcon from "@mui/icons-material/Article";
 import LogoutIcon from '@mui/icons-material/Logout';
+import { useAuthStore } from "@/hooks/useAuthStore";
 
 const links = [
   { text: 'Seguimiento', icon: <DashboardIcon />, route: RouterLinks.student.pasantias.PasantiasDashboard },
   { text: 'Documentos', icon: <ArticleIcon />, route: RouterLinks.student.pasantias.PasantiasDocument },
   { text: 'Salir', icon: <LogoutIcon />, route: RouterLinks.student.StudentDashboard },
 ];
-
-const user = { name: 'Maria Diaz', avatarUrl: '/perfil.jpg' };
-
-// import { generarCartaCulminacionPDF } from './utils/pdfGenerator';
-
-//Constantes
 
 const horasCumplir = 320
 
@@ -77,6 +72,8 @@ const PasantiasDashboard = () => {
   const [openEditModal, setOpenEditModal] = useState(false);
   const [editedActivity, setEditedActivity] = useState(null);
   const [canDownload, setCanDownload] = useState(false);
+
+  const { user } = useAuthStore();
 
   //Horas
   useEffect(() => {
@@ -142,11 +139,6 @@ const PasantiasDashboard = () => {
     setOpenEditModal(false);
   };
 
-  //Generar pdf
-  const handleDownloadCompletionLetter = () => {
-    generarCartaCulminacionPDF(studentData, student, activities);
-  };
-
   return (
     <PageTemplate>
       <Sidebar title="Estudiante Pasantias" links={links}
@@ -159,11 +151,11 @@ const PasantiasDashboard = () => {
             <Grid item xs={12}>
               <CustomBox>
                 <Typography variant="h6" gutterBottom>Datos del Estudiante</Typography>
-                <TitleValue title="Nombre y Apellido" value={`${studentData.name} ${studentData.lastname}`} />
-                <TitleValue title="Cedula" value={studentData.ci} />
-                <TitleValue title="Empresa" value={student.empresa} />
-                <TitleValue title="Tutor Academico" value={student.tutorAcademico} />
-                <TitleValue title="Tutor Empresarial" value={student.tutorEmpresarial} />
+                <TitleValue title="Nombre y Apellido" value={`${user.name} ${user.lastName}`} />
+                <TitleValue title="Cedula" value={user.CI} />
+                <TitleValue title="Empresa" value={user.empresa} />
+                <TitleValue title="Tutor Academico" value={user.tutorAcademico} />
+                <TitleValue title="Tutor Empresarial" value={user.tutorEmpresarial} />
               </CustomBox>
             </Grid>
           </Grid>
