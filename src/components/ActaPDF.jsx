@@ -63,8 +63,8 @@ export const ActaPDF = (qrCodeImageUrl) => {
         projectTitle: 'Proyecto de Fortalecimiento para los Sistemas de Información de la Fundación de Personas Autistas de Guárico (FUPAGUA)',
         foundation: 'FUPAGUA',
         academicTutor: 'Prof.ª Liliana Alcalá',
-        startDate: new Date(2024, 1, 14), 
-        endDate: new Date(2024, 7, 30) 
+        startDate: new Date(2024, 1, 14),
+        endDate: new Date(2024, 7, 30)
     };
 
     const margin = 2.5;
@@ -128,8 +128,12 @@ export const ActaPDF = (qrCodeImageUrl) => {
 
             doc.addImage(qrCodeImageUrl, 'PNG', qrX, qrY, qrWidth, qrHeight);
 
-            // Save the PDF
-            doc.save(`acta_conclusion_servicio_comunitario_${today.getFullYear()}_${today.getMonth() + 1}.pdf`);
+            // Generate PDF and create a Blob URL
+            const pdfBlob = doc.output('blob');
+            const pdfURL = window.URL.createObjectURL(pdfBlob);
+
+            // Open the PDF in a new window
+            window.open(pdfURL, '_blank');
         };
     };
 };

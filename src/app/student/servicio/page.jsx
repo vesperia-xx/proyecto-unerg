@@ -136,10 +136,6 @@ const ServicioDashboard = () => {
       const qrCodeDataUrl = await generateQRCode(`Nombre: ${studentData.name} ${studentData.lastname}\nCI: ${studentData.ci}\nTotal Horas: ${totalHours}`);
       const pdfBytes = await createPDF(qrCodeDataUrl);
       if (pdfBytes instanceof Blob) {
-        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-        const url = URL.createObjectURL(blob);
-        setPdfUrl(url);
-        setPreviewOpen(true);
       } else {
         console.error('Error: PDF creation returned invalid data.');
       }
@@ -147,27 +143,26 @@ const ServicioDashboard = () => {
       console.error('Error generating PDF:', error);
     }
   };
-  
+
   const generateActaPDF = async () => {
     try {
-        const actaContent = `Acta de servicio:\nNombre: ${studentData.name} ${studentData.lastname}\nCI: ${studentData.ci}\nTotal Horas: ${totalHours}`;
-        const pdfBytes = await ActaPDF(actaContent); // Llamar al componente ActaPDF para generar el PDF
-        return pdfBytes;
+      const actaContent = `Acta de servicio:\nNombre: ${studentData.name} ${studentData.lastname}\nCI: ${studentData.ci}\nTotal Horas: ${totalHours}`;
+      const pdfBytes = await ActaPDF(actaContent); // Llamar al componente ActaPDF para generar el PDF
+      return pdfBytes;
     } catch (error) {
-        console.error('Error generating Acta PDF:', error);
-        throw error; // Manejo de errores
+      console.error('Error generating Acta PDF:', error);
+      throw error; // Manejo de errores
     }
-};
+  };
 
-const handleDownloadActa = async () => {
-  try {
-    const qrCodeDataUrl = await generateQRCode(`Nombre: ${user.name}\nTotal Horas: 100`);
-    ActaPDF(qrCodeDataUrl);
-  } catch (error) {
-    console.error('Error generating Acta PDF:', error);
-  }
-  
-};
+  const handleDownloadActa = async () => {
+    try {
+      const qrCodeDataUrl = await generateQRCode(`Nombre: ${user.name}\nTotal Horas: 100`);
+      ActaPDF(qrCodeDataUrl);
+    } catch (error) {
+      console.error('Error generating Acta PDF:', error);
+    }
+  };
 
   return (
     <PageTemplate>
@@ -209,25 +204,25 @@ const handleDownloadActa = async () => {
           <div style={{ marginTop: 20, textAlign: 'center' }}>
             <Button
               variant="outlined"
-              style={{ color: '#47AD64', borderColor: '#47AD64', textTransform: 'none'}}
+              style={{ color: '#47AD64', borderColor: '#47AD64', textTransform: 'none', padding: '5px 26px' }}
               startIcon={<GetAppIcon style={{ color: '#47AD64' }} />}
               onClick={handlePreviewPDF}
               disabled={!canDownloadCarta}
             >
               Descargar carta de culminación
             </Button>
-            </div>
+          </div>
 
-            <div style={{ marginTop: 20, textAlign: 'center'}}>
+          <div style={{ marginTop: 20, textAlign: 'center' }}>
             <Button
               variant="outlined"
-              style={{ color: '#4079ED', borderColor: '#4079ED', textTransform: 'none'}}
+              style={{ color: '#4079ED', borderColor: '#4079ED', textTransform: 'none', padding: '5px 32px' }}
               color="primary"
               startIcon={<GetAppIcon />}
               onClick={handleDownloadActa}
               disabled={!canDownloadCarta}
             >
-                 Descargar acta de conclusión 
+              Descargar acta de conclusión
             </Button>
           </div>
 

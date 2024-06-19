@@ -33,12 +33,12 @@ const documentServicio = [
   { id: 3, name: 'ADSCRIPCIÓN AL ESTUDIANTE AL SERVICIO COMUNITARIO', url: '/pdf/AdscripcionEstudiante.pdf' },
 ];
 
- const ServicioDocument = () => {
-    // Función para manejar la descarga 
-    const handleDownloadPDF = (url) => {
-      // lógica para descargar 
-      window.open(url, '_blank');
-    };
+const ServicioDocument = () => {
+  // Función para manejar la descarga 
+  const handleDownloadPDF = (url) => {
+    // lógica para descargar 
+    window.open(url, '_blank');
+  };
 
   return (
     <PageTemplate>
@@ -64,7 +64,7 @@ const documentServicio = [
                 <TableCell>{doc.name}</TableCell>
                 <TableCell align="center">
 
-                <IconButton
+                  <IconButton
                     onClick={() => handleDownloadPDF(doc.url)}
                     aria-label="download PDF"
                     sx={{ color: '#444A6D' }}
@@ -83,6 +83,3 @@ const documentServicio = [
 };
 
 export default ServicioDocument;
-
-
-
