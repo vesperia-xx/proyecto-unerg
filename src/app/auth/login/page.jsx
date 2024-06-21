@@ -19,13 +19,17 @@ function SignInSide() {
   const { email, password, onInputChange } = useForm(loginFormFields);
   const { startLogin, errorMessage, status, user } = useAuthStore();
   
-  useEffect(() => { 
-    if (status === 'authenticated') { 
-
-
-        redirect("/student"); 
-
-    } 
+  useEffect(() => {
+    if (status === 'authenticated' && user && user.roles) {
+      const roles = user.roles.map(role => role.name);
+      if (roles.includes('AdminPasantias')) {
+        window.location.href = '/admin/pasantias';
+      } else if (roles.includes('User')) {
+        window.location.href = '/student';
+      } else if (roles.includes('AdminServicio')) {
+        window.location.href = '/admin/servicio';
+      }
+    }
   }, [status, user]);
 
   const handleSubmit = (event) => {

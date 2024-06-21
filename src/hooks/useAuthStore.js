@@ -17,7 +17,7 @@ export const useAuthStore = () => {
             const { data } = await unergApi.post('http://localhost:4000/api/auth', { email, password });
             localStorage.setItem('token', data.token);
             localStorage.setItem('token-init-date', new Date().getTime());
-            dispatch(onLogin({ name: data.name, uid: data.uid }));
+            dispatch(onLogin({ name: data.name, uid: data.uid, roles: data.roles, lastName: data.lastName, CI: data.CI, phoneNumber: data.phoneNumber, email: data.email, }));
             console.log({ data })
 
         } catch (error) {
