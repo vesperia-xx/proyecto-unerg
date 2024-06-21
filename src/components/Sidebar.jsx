@@ -14,12 +14,14 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Image from 'next/image';
+import { useAuthStore } from '@/hooks/useAuthStore';
 
 const drawerWidth = 240;
 
 const Sidebar = ({ title, links, profileImage, profileName }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(null);
+  const { startLogout } = useAuthStore()
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -59,8 +61,13 @@ const Sidebar = ({ title, links, profileImage, profileName }) => {
             key={index}
             component="a"
             href={link.route}
-            selected={selectedIndex === index} 
-            onClick={() => handleListItemClick(index)}
+            selected={selectedIndex === index}
+            onClick={() => {
+              handleListItemClick(index);
+              if (link.text === 'Salir') {
+                handleLogout(); // Llama a la función handleLogout al hacer clic en Salir
+              }
+            }}
             sx={{ color: selectedIndex === index ? '#4079ED' : '#737791', textDecoration: 'none' }} // Cambiar color seleccionado a azul
           >
             <ListItemIcon sx={{ color: selectedIndex === index ? '#4079ED' : '#737791' }}> {/* Cambiar color de iconos a blanco */}
@@ -82,6 +89,11 @@ const Sidebar = ({ title, links, profileImage, profileName }) => {
       </List>
     </div>
   );
+
+  const handleLogout = () => {
+    startLogout();
+    window.location.href = '/'
+  };
 
   return (
     <Box sx={{ display: 'flex' }}>

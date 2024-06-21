@@ -6,6 +6,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
+import { useAuthStore } from "@/hooks/useAuthStore"; // Importa el hook de autenticación
 
 import Sidebar from "@/components/Sidebar";
 import ServiceModal from "@/components/ServiceModal";
@@ -27,6 +28,8 @@ const links = [
 const user = { name: 'Maria Diaz', avatarUrl: '/perfil.jpg' };
 
 const DashboardStudent = () => {
+    const { startLogout } = useAuthStore(); // Obtén la función startLogout del hook useAuthStore
+
     const [isServiceRegistered, setIsServiceRegistered] = useState(false);
     const [isPasantiasRegistered, setIsPasantiasRegistered] = useState(false);
     const [openServiceModal, setOpenServiceModal] = useState(false);
@@ -66,6 +69,10 @@ const DashboardStudent = () => {
         });
     };
 
+    const handleLogout = () => {
+        startLogout(); // Llama a la función startLogout al hacer clic en Salir
+    };
+
     return (
         <div>
             <PageTemplate>
@@ -74,6 +81,7 @@ const DashboardStudent = () => {
                     links={links}
                     profileName={user.name}
                     profileImage={user.avatarUrl}
+                    handleLogout={handleLogout} // Pasa la función handleLogout al Sidebar
                 />
                 <Grid container spacing={2} className="dashboard-links">
                     <Grid item xs={12} sm={6}>
