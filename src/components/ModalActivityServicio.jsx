@@ -4,6 +4,7 @@ import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
+import { useForm } from "@/hooks/useForm";
 
 const style = {
   display: 'flex',
@@ -23,52 +24,53 @@ const style = {
   transition: 'transform 0.3s ease-in-out',
 };
 
+const initialActivityState = {
+  activity: '',
+  week: '',
+  date: '',
+  hours: ''
+};
+
 const ModalActivityServicio = ({ open, onClose, onAddActivity, onEditActivity, editedActivity }) => {
-  const [activityData, setActivityData] = useState({
-    activity: '',
-    week: '',
-    date: '',
-    hours: ''
-  });
+  const [formState, setFormState] = useState(initialActivityState);
+  const [openAlert, setOpenAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
 
   useEffect(() => {
     if (editedActivity) {
-      setActivityData({
-        activity: editedActivity.activity || '',
-        week: editedActivity.week || '',
-        date: editedActivity.date || '',
-        hours: editedActivity.hours || ''
-      });
+      setFormState(editedActivity);
     } else {
-      setActivityData({
-        activity: '',
-        week: '',
-        date: '',
-        hours: ''
-      });
+      setFormState(initialActivityState);
     }
   }, [editedActivity]);
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setActivityData({ ...activityData, [name]: value });
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormState({ ...formState, [name]: value });
   };
 
-  const handleAction = () => {
-    if (activityData.activity && activityData.week && activityData.date && activityData.hours) {
-      if (editedActivity) {
-        onEditActivity({ ...editedActivity, ...activityData });
-      } else {
-        onAddActivity({ ...activityData, id: Date.now().toString() });
-      }
-      onClose();
-    } else {
+  const handleSave = () => {
+    const { activity, week, date, hours } = formState;
+    if (!activity || !week || !date || !hours) {
       setAlertMessage('Por favor, complete todos los campos.');
+      setOpenAlert(true);
+      return;
     }
+
+    console.log({ activity, week, date, hours });
+ 
+
+    if (editedActivity) {
+      onEditActivity({ ...formState, id: editedActivity.id });
+    } else {
+      onAddActivity({ ...formState, id: Date.now().toString() });
+    }
+
+    onClose();
   };
 
   const handleCloseAlert = () => {
+    setOpenAlert(false);
     setAlertMessage('');
   };
 
@@ -79,13 +81,9 @@ const ModalActivityServicio = ({ open, onClose, onAddActivity, onEditActivity, e
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-
-
-
       <Box sx={style}>
         <form style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        
-        {alertMessage && (
+          {openAlert && (
             <Alert severity="error" onClose={handleCloseAlert} style={{ width: '100%', marginTop: '10px' }}>
               {alertMessage}
             </Alert>
@@ -97,8 +95,8 @@ const ModalActivityServicio = ({ open, onClose, onAddActivity, onEditActivity, e
             name="activity"
             label="Actividad"
             variant="outlined"
-            value={activityData.activity}
-            onChange={handleChange}
+            value={formState.activity}
+            onChange={handleInputChange}
             required
           />
           <TextField
@@ -107,8 +105,8 @@ const ModalActivityServicio = ({ open, onClose, onAddActivity, onEditActivity, e
             name="week"
             label="Semana"
             variant="outlined"
-            value={activityData.week}
-            onChange={handleChange}
+            value={formState.week}
+            onChange={handleInputChange}
             required
             inputProps={{ min: "0" }}
           />
@@ -118,9 +116,9 @@ const ModalActivityServicio = ({ open, onClose, onAddActivity, onEditActivity, e
             name="date"
             label="Fecha"
             variant="outlined"
-            value={activityData.date}
+            value={formState.date}
             InputLabelProps={{ shrink: true }}
-            onChange={handleChange}
+            onChange={handleInputChange}
             required
           />
           <TextField
@@ -129,13 +127,17 @@ const ModalActivityServicio = ({ open, onClose, onAddActivity, onEditActivity, e
             name="hours"
             label="Horas"
             variant="outlined"
-            value={activityData.hours}
-            onChange={handleChange}
+            value={formState.hours}
+            onChange={handleInputChange}
             required
             inputProps={{ min: "0" }}
           />
-          
-          <Button variant="contained" style={{ backgroundColor: '#4079ED', color: '#FFFFFF', marginTop: '10px' }} onClick={handleAction}>
+
+          <Button
+            variant="contained"
+            style={{ backgroundColor: '#4079ED', color: '#FFFFFF', marginTop: '10px' }}
+            onClick={handleSave}
+          >
             {editedActivity ? 'Editar' : 'Guardar'}
           </Button>
         </form>
@@ -145,3 +147,4 @@ const ModalActivityServicio = ({ open, onClose, onAddActivity, onEditActivity, e
 };
 
 export default ModalActivityServicio;
+

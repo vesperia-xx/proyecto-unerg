@@ -25,36 +25,27 @@ const style = {
   transition: 'transform 0.3s ease-in-out',
 };
 
+const initialActivityState = {
+  activity: '',
+  startDate: '',
+  endDate: '',
+  hours: ''
+};
+
 const ModalActivityPasantias = ({ open, onClose, onAddActivity, onEditActivity, editedActivity }) => {
-  const [activityData, setActivityData] = useState({
-    activity: '',
-    startDate: '',
-    endDate: '',
-    hours: ''
-  });
-  const [alertMessage, setAlertMessage] = useState(null);
+  const [formState, setFormState] = useState(initialActivityState);
+  const [alertMessage, setAlertMessage] = useState('');
 
   useEffect(() => {
     if (editedActivity) {
-      setActivityData({
-        activity: editedActivity.activity || '',
-        startDate: editedActivity.startDate || '',
-        endDate: editedActivity.endDate || '',
-        hours: editedActivity.hours || ''
-      });
+      setFormState(editedActivity);
     } else {
-      setActivityData({
-        activity: '',
-        startDate: '',
-        endDate: '',
-        hours: ''
-      });
+      setFormState(initialActivityState);
     }
   }, [editedActivity]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
-
     if (name === 'hours' && (isNaN(value) || parseFloat(value) < 0)) {
       return;
     }
@@ -66,7 +57,7 @@ const ModalActivityPasantias = ({ open, onClose, onAddActivity, onEditActivity, 
     }
 
     if (name === 'startDate') {
-      const endDate = new Date(activityData.endDate);
+      const endDate = new Date(formState.endDate);
       const startDate = new Date(value);
 
       if (startDate > endDate) {
@@ -76,7 +67,7 @@ const ModalActivityPasantias = ({ open, onClose, onAddActivity, onEditActivity, 
     }
 
     if (name === 'endDate') {
-      const startDate = new Date(activityData.startDate);
+      const startDate = new Date(formState.startDate);
       const endDate = new Date(value);
 
       if (endDate < startDate) {
@@ -85,16 +76,20 @@ const ModalActivityPasantias = ({ open, onClose, onAddActivity, onEditActivity, 
       }
     }
 
-    setActivityData({ ...activityData, [name]: numericValue });
-    setAlertMessage(null); 
+    setFormState({ ...formState, [name]: numericValue });
+    setAlertMessage('');
   };
 
   const handleAction = () => {
-    if (activityData.activity && activityData.startDate && activityData.endDate && activityData.hours) {
+    const { activity, startDate, endDate, hours } = formState;
+
+    // Validate all fields are filled
+    console.log({ activity, startDate, endDate, hours });
+    if (activity && startDate && endDate && hours) {
       if (editedActivity) {
-        onEditActivity({ ...editedActivity, ...activityData });
+        onEditActivity({ ...editedActivity, ...formState });
       } else {
-        onAddActivity({ ...activityData, id: Date.now().toString() });
+        onAddActivity({ ...formState, id: Date.now().toString() });
       }
       onClose();
     } else {
@@ -103,7 +98,7 @@ const ModalActivityPasantias = ({ open, onClose, onAddActivity, onEditActivity, 
   };
 
   const handleCloseAlert = () => {
-    setAlertMessage(null);
+    setAlertMessage('');
   };
 
   return (
@@ -115,8 +110,7 @@ const ModalActivityPasantias = ({ open, onClose, onAddActivity, onEditActivity, 
     >
       <Box sx={style}>
         <form style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          
-        {alertMessage && (
+          {alertMessage && (
             <Alert severity="error" action={
               <IconButton
                 aria-label="close"
@@ -130,14 +124,14 @@ const ModalActivityPasantias = ({ open, onClose, onAddActivity, onEditActivity, 
               {alertMessage}
             </Alert>
           )}
-          
+
           <TextField
             style={{ width: "200px", margin: "5px" }}
             type="text"
             name="activity"
             label="Actividad"
             variant="outlined"
-            value={activityData.activity}
+            value={formState.activity}
             onChange={handleChange}
             required
           />
@@ -146,22 +140,22 @@ const ModalActivityPasantias = ({ open, onClose, onAddActivity, onEditActivity, 
             type="date"
             name="startDate"
             variant="outlined"
-            value={activityData.startDate}
+            value={formState.startDate}
             onChange={handleChange}
             required
-            InputLabelProps={{ shrink: true }} 
-            label="Fecha de Inicio" 
+            InputLabelProps={{ shrink: true }}
+            label="Fecha de Inicio"
           />
           <TextField
             style={{ width: "200px", margin: "5px" }}
             type="date"
             name="endDate"
             variant="outlined"
-            value={activityData.endDate}
+            value={formState.endDate}
             onChange={handleChange}
             required
-            InputLabelProps={{ shrink: true }} 
-            label="Fecha de Fin" 
+            InputLabelProps={{ shrink: true }}
+            label="Fecha de Fin"
           />
           <TextField
             style={{ width: "200px", margin: "5px" }}
@@ -169,10 +163,10 @@ const ModalActivityPasantias = ({ open, onClose, onAddActivity, onEditActivity, 
             name="hours"
             label="Horas"
             variant="outlined"
-            value={activityData.hours}
+            value={formState.hours}
             onChange={handleChange}
             required
-            inputProps={{ min: "0" }} 
+            inputProps={{ min: "0" }}
           />
           <Button variant="contained" style={{ backgroundColor: '#4079ED', color: '#FFFFFF', marginTop: '10px' }} onClick={handleAction}>
             {editedActivity ? 'Editar' : 'Guardar'}
