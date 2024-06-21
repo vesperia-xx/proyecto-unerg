@@ -24,7 +24,7 @@ import { useAuthStore } from "@/hooks/useAuthStore";
 const links = [
   { text: 'Seguimiento', icon: <DashboardIcon />, route: RouterLinks.student.pasantias.PasantiasDashboard },
   { text: 'Documentos', icon: <ArticleIcon />, route: RouterLinks.student.pasantias.PasantiasDocument },
-  { text: 'Salir', icon: <LogoutIcon />, route: RouterLinks.student.StudentDashboard },
+  { text: 'Salir', icon: <LogoutIcon />, route: '/' },
 ];
 
 const horasCumplir = 320
@@ -45,14 +45,6 @@ const pasantiasActivities = [
     hours: 30
   },
 ];
-
-const studentData = {
-  name: 'Maria',
-  lastname: 'Diaz',
-  ci: '30318748',
-  phoneNumber: '04140416579',
-  email: 'maria@email.com',
-};
 
 const studentPasantias = {
   title: 'proyecto bigchungo',
@@ -142,8 +134,8 @@ const PasantiasDashboard = () => {
   return (
     <PageTemplate>
       <Sidebar title="Estudiante Pasantias" links={links}
-        profileName={user.name}
-        profileImage={user.avatarUrl} />
+        profileName={`${user.name} ${user.lastName}`}
+        profileImage={user.avatarUrl || "/perfil.jpg"} />
 
       <Grid container spacing={3}>
         <Grid item xs={12} md={7}>
@@ -153,9 +145,9 @@ const PasantiasDashboard = () => {
                 <Typography variant="h6" gutterBottom>Datos del Estudiante</Typography>
                 <TitleValue title="Nombre y Apellido" value={`${user.name} ${user.lastName}`} />
                 <TitleValue title="Cedula" value={user.CI} />
-                <TitleValue title="Empresa" value={user.empresa} />
-                <TitleValue title="Tutor Academico" value={user.tutorAcademico} />
-                <TitleValue title="Tutor Empresarial" value={user.tutorEmpresarial} />
+                <TitleValue title="Empresa" value={studentPasantias.empresa} />
+                <TitleValue title="Tutor Academico" value={studentPasantias.tutorAcademico} />
+                <TitleValue title="Tutor Empresarial" value={studentPasantias.tutorEmpresarial} />
               </CustomBox>
             </Grid>
           </Grid>

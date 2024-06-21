@@ -19,13 +19,12 @@ import RouterLinks from "@/routes/RouterLinks";
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ArticleIcon from "@mui/icons-material/Article";
 import LogoutIcon from '@mui/icons-material/Logout';
-
-const user = { name: 'Maria Diaz', avatarUrl: '/perfil.jpg' };
+import { useAuthStore } from "@/hooks/useAuthStore";
 
 const links = [
   { text: 'Seguimiento', icon: <DashboardIcon />, route: RouterLinks.student.pasantias.PasantiasDashboard },
   { text: 'Documentos', icon: <ArticleIcon />, route: RouterLinks.student.pasantias.PasantiasDocument },
-  { text: 'Salir', icon: <LogoutIcon />, route: RouterLinks.student.StudentDashboard },
+  { text: 'Salir', icon: <LogoutIcon />, route: "/" },
 ];
 
 const documentPasantias = [
@@ -42,11 +41,14 @@ const pasantiasDocument = () => {
     window.open(url, '_blank');
   };
 
+  const { user } = useAuthStore();
+
   return (
     <PageTemplate>
+
       <Sidebar title="Documentos" links={links}
-        profileName={user.name}
-        profileImage={user.avatarUrl}
+        profileName={`${user.name} ${user.lastName}`}
+        profileImage={user.avatarUrl || "/perfil.jpg"}
       />
       <TableStyled hover>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">

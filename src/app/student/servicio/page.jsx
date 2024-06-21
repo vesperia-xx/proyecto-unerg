@@ -17,16 +17,16 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { generateQRCode } from "@/components/GenerateQRCode";
 import { createPDF } from "@/components/CreatePDF";
 import { ActaPDF } from "@/components/ActaPDF";
+import { useAuthStore } from "@/hooks/useAuthStore";
 
 const links = [
   { text: 'Seguimiento', icon: <DashboardIcon />, route: RouterLinks.student.servicio.ServicioDashboard },
   { text: 'Documentos', icon: <ArticleIcon />, route: RouterLinks.student.servicio.ServicioDocument },
-  { text: 'Salir', icon: <LogoutIcon />, route: RouterLinks.student.StudentDashboard },
+  { text: 'Salir', icon: <LogoutIcon />, route: '/' },
 ];
 
 const horasCumplir = 120;
 
-const user = { name: 'Maria Diaz', avatarUrl: '/perfil.jpg' };
 
 const servicioActivities = [
   {
@@ -45,14 +45,6 @@ const servicioActivities = [
   },
 ];
 
-const studentData = {
-  name: 'Maria',
-  lastname: 'Diaz',
-  ci: '30318748',
-  phoneNumber: '04140416579',
-  email: 'maria@email',
-};
-
 const studentServicio = {
   title: 'proyecto bigchungo',
   empresa: 'FUPAGUA',
@@ -63,6 +55,9 @@ const studentServicio = {
 };
 
 const ServicioDashboard = () => {
+
+  const { user } = useAuthStore();
+
   const [activities, setActivities] = useState(servicioActivities);
   const [student, setStudent] = useState(studentServicio);
   const [totalHours, setTotalHours] = useState(studentServicio.hour);
@@ -133,8 +128,8 @@ const ServicioDashboard = () => {
 
   const handlePreviewPDF = async () => {
     try {
-      const qrCodeDataUrl = await generateQRCode(`Nombre: ${studentData.name} ${studentData.lastname}\nCI: ${studentData.ci}\nTotal Horas: ${totalHours}`);
-      const pdfBytes = await createPDF(qrCodeDataUrl);
+      const qrCodeDataUrl = await generateQRCode(`Nombre: ${user.name} ${user.lastName}\nCI: ${user.CI}\nTotal Horas: ${totalHours}`);
+      const pdfBytes = await createPDF(user, qrCodeDataUrl);
       if (pdfBytes instanceof Blob) {
       } else {
         console.error('Error: PDF creation returned invalid data.');
@@ -144,21 +139,10 @@ const ServicioDashboard = () => {
     }
   };
 
-  const generateActaPDF = async () => {
-    try {
-      const actaContent = `Acta de servicio:\nNombre: ${studentData.name} ${studentData.lastname}\nCI: ${studentData.ci}\nTotal Horas: ${totalHours}`;
-      const pdfBytes = await ActaPDF(actaContent); // Llamar al componente ActaPDF para generar el PDF
-      return pdfBytes;
-    } catch (error) {
-      console.error('Error generating Acta PDF:', error);
-      throw error; // Manejo de errores
-    }
-  };
-
   const handleDownloadActa = async () => {
     try {
-      const qrCodeDataUrl = await generateQRCode(`Nombre: ${user.name}\nTotal Horas: 100`);
-      ActaPDF(qrCodeDataUrl);
+      const qrCodeDataUrl = await generateQRCode(`Nombre: ${user.name} ${user.lastName}\nCI: ${user.CI}\nTotal Horas: ${totalHours}`);
+      ActaPDF(user, qrCodeDataUrl);
     } catch (error) {
       console.error('Error generating Acta PDF:', error);
     }
@@ -169,8 +153,8 @@ const ServicioDashboard = () => {
       <Sidebar
         title="Estudiante Servicio"
         links={links}
-        profileName={user.name}
-        profileImage={user.avatarUrl}
+        profileName={`${user.name} ${user.lastName}`}
+        profileImage={user.avatarUrl || "/perfil.jpg"}
       />
 
       <Grid container spacing={3}>
@@ -179,8 +163,8 @@ const ServicioDashboard = () => {
             <Grid item xs={12}>
               <CustomBox>
                 <Typography variant="h6" gutterBottom>Datos del Estudiante</Typography>
-                <TitleValue title="Nombre y Apellido" value={`${studentData.name} ${studentData.lastname}`} />
-                <TitleValue title="Cedula" value={studentData.ci} />
+                <TitleValue title="Nombre y Apellido" value={`${user.name} ${user.lastName}`} />
+                <TitleValue title="Cedula" value={user.CI} />
                 <TitleValue title="Empresa" value={student.empresa} />
                 <TitleValue title="Tutor Academico" value={student.tutorAcademico} />
                 <TitleValue title="Tutor Comunitario" value={student.tutorComunitario} />

@@ -11,13 +11,12 @@ import RouterLinks from "@/routes/RouterLinks";
 
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { useAuthStore } from "@/hooks/useAuthStore";
 
 const links = [
   { text: 'Estudiantes', icon: <PeopleAltIcon />, route: RouterLinks.admin.pasantias.PasantiasEstudiantes },
   { text: 'Salir', icon: <LogoutIcon />, route: "/" },
 ];
-
-const user = { name: 'Admin', avatarUrl: '/admin.png' };
 
 const PasantiasEstudiantes = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -34,9 +33,9 @@ const PasantiasEstudiantes = () => {
 
   const studentData = {
     id: 1,
-    name: 'Maria',
-    lastname: 'Diaz',
-    ci: '30318748',
+    name: 'nico',
+    lastname: 'sterling',
+    ci: '13133033',
     phoneNumber: '04140416579',
     email: 'maria@example.com'
   };
@@ -78,11 +77,13 @@ const PasantiasEstudiantes = () => {
     alert('Ha rechazado al alumno.');
   };
 
+  const { user } = useAuthStore();
+
   return (
     <PageTemplate>
       <Sidebar title="Admin Pasantias" links={links} 
-         profileName={user.name}
-         profileImage={user.avatarUrl}
+           profileName={`${user.name} ${user.lastName}`}
+         profileImage={user.avatarUrl || "/perfil.jpg"}
       />
 
       <TableStyled hover>

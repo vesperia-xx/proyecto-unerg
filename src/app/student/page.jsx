@@ -6,7 +6,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
-import { useAuthStore } from "@/hooks/useAuthStore"; // Importa el hook de autenticación
+import { useAuthStore } from "@/hooks/useAuthStore";
 
 import Sidebar from "@/components/Sidebar";
 import ServiceModal from "@/components/ServiceModal";
@@ -25,9 +25,10 @@ const links = [
     { text: 'Salir', icon: <LogoutIcon />, route: "/" },
 ];
 
-const user = { name: 'Maria Diaz', avatarUrl: '/perfil.jpg' };
-
 const DashboardStudent = () => {
+
+    const { user } = useAuthStore();
+
     const { startLogout } = useAuthStore(); // Obtén la función startLogout del hook useAuthStore
 
     const [isServiceRegistered, setIsServiceRegistered] = useState(false);
@@ -79,9 +80,9 @@ const DashboardStudent = () => {
                 <Sidebar
                     title="Estudiante"
                     links={links}
-                    profileName={user.name}
-                    profileImage={user.avatarUrl}
+                    profileName={`${user.name} ${user.lastName}`}
                     handleLogout={handleLogout} // Pasa la función handleLogout al Sidebar
+                    profileImage={user.avatarUrl || "/perfil.jpg"}
                 />
                 <Grid container spacing={2} className="dashboard-links">
                     <Grid item xs={12} sm={6}>

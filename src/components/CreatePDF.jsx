@@ -1,6 +1,6 @@
 import jsPDF from 'jspdf';
 
-export const createPDF = (qrCodeImageUrl) => {
+export const createPDF = (user, qrCodeImageUrl) => {
     // Crear un nuevo documento jsPDF en orientación portrait, unidades cm, y formato A4
     const doc = new jsPDF({
         orientation: 'portrait',
@@ -38,14 +38,14 @@ export const createPDF = (qrCodeImageUrl) => {
             name: 'María José',
             lastname: 'Díaz Quiñones',
             ci: '30.318.748',
-            projectTitle: 'Proyecto de Fortalecimiento para los Sistemas de Información de la Fundación de Personas Autistas de Guárico (FUPAGUA)',
+            projectTitle: 'proyecto bigchungo',
             foundation: 'FUPAGUA',
             academicTutor: 'Prof.ª Liliana Alcalá',
         };
 
         // Cuerpo del texto
         doc.setFontSize(12);
-        const bodyText = `Quienes suscriben, hacen constar por medio de la presente que el ciudadano Bachiller: ${studentData.name} ${studentData.lastname}, titular de la Cédula de Identidad N° ${studentData.ci}, estudiante del Área de Ingeniería de Sistemas, CULMINÓ las actividades inherentes a la prestación del Servicio Comunitario según lo establecido en la LEY DE SERVICIO COMUNITARIO DEL ESTUDIANTE DE EDUCACIÓN SUPERIOR y sus REGLAMENTOS, a través de la ejecución del Proyecto: "${studentData.projectTitle}", en la fundación: ${studentData.foundation} con el apoyo de la Tutora Académica: ${studentData.academicTutor}.`;
+        const bodyText = `Quienes suscriben, hacen constar por medio de la presente que el ciudadano Bachiller: ${user.name} ${user.lastName}, titular de la Cédula de Identidad N° ${user.CI}, estudiante del Área de Ingeniería de Sistemas, CULMINÓ las actividades inherentes a la prestación del Servicio Comunitario según lo establecido en la LEY DE SERVICIO COMUNITARIO DEL ESTUDIANTE DE EDUCACIÓN SUPERIOR y sus REGLAMENTOS, a través de la ejecución del Proyecto: "${studentData.projectTitle}", en la fundación: ${studentData.foundation} con el apoyo de la Tutora Académica: ${studentData.academicTutor}.`;
         doc.text(bodyText, margin, 8 + margin, { maxWidth: 21 - 2 * margin, align: 'justify' });
 
         // Texto del pie de página

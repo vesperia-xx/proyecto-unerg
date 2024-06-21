@@ -12,6 +12,8 @@ import RouterLinks from "@/routes/RouterLinks";
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import LogoutIcon from '@mui/icons-material/Logout';
 
+import { useAuthStore } from "@/hooks/useAuthStore";
+
 // Importar aquí la lógica para interactuar con la tabla InscriptionRequest según tu entorno y herramientas (por ejemplo, Axios, GraphQL, etc.)
 
 const links = [
@@ -35,9 +37,9 @@ const ServicioEstudiantes = () => {
     ]);
 
     const studentData = {
-        name: 'Maria',
-        lastname: 'Diaz',
-        ci: '30318748',
+        name: 'nico',
+        lastname: 'sterling',
+        ci: '13133033',
         phoneNumber: '04140416579',
         email: 'maria@email',
     };
@@ -77,12 +79,15 @@ const ServicioEstudiantes = () => {
         alert('Ha rechazado al alumno.');
     };
 
+    
+  const { user } = useAuthStore();
+
     return (
         <PageTemplate>
 
             <Sidebar title="Admin Servicio" links={links} 
-             profileName={user.name}
-             profileImage={user.avatarUrl}
+              profileName={`${user.name} ${user.lastName}`}
+             profileImage={user.avatarUrl || "/perfil.jpg"}
             />
 
             <TableStyled hover>
