@@ -27,9 +27,8 @@ const links = [
 ];
 
 const documentServicio = [
-  { id: 1, name: 'CONSTANCIA APROBACIÓN TALLER SERVICIO COMUNITARIO', url: '/pdf/ConstanciaAprobacion.pdf' },
-  { id: 2, name: 'REGISTRO DE ACTIVIDADES, SEGUIMIENTO Y CONTROL DE ASISTENCIA', url: '/pdf/RegistroActividades.pdf' },
-  { id: 3, name: 'ADSCRIPCIÓN AL ESTUDIANTE AL SERVICIO COMUNITARIO', url: '/pdf/AdscripcionEstudiante.pdf' },
+  { id: 1, name: 'REGISTRO DE ACTIVIDADES, SEGUIMIENTO Y CONTROL DE ASISTENCIA', url: '/pdf/RegistroActividades.pdf' },
+  { id: 2, name: 'ADSCRIPCIÓN AL ESTUDIANTE AL SERVICIO COMUNITARIO', url: '/pdf/AdscripcionEstudiante.pdf' },
 ];
 
 const ServicioDocument = () => {
