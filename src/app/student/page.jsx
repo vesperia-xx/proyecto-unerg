@@ -20,6 +20,8 @@ import LogoutIcon from '@mui/icons-material/Logout';
 
 import Swal from "sweetalert2";
 
+import withAuth from "@/helpers/withAuth";
+
 const links = [
     { text: 'Mi perfil', icon: <PersonIcon />, route: RouterLinks.student.StudentDashboard },
     { text: 'Salir', icon: <LogoutIcon />, route: "/" },
@@ -144,4 +146,4 @@ const DashboardStudent = () => {
     );
 };
 
-export default DashboardStudent;
+export default withAuth (DashboardStudent,['User']);

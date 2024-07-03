@@ -5,6 +5,7 @@ import { createTheme, ThemeProvider, Button, CssBaseline, TextField, Link, Grid,
 import Image from 'next/image';
 import { useAuthStore } from '@/hooks/useAuthStore';
 import { useForm } from '@/hooks/useForm';
+import Swal from "sweetalert2";
 
 // Define el tema personalizado
 const theme = createTheme();
@@ -24,9 +25,33 @@ export default function SignUp() {
   const { startRegister } = useAuthStore()
   const { email, lastName, name, CI, phoneNumber, password, image, onInputChange } = useForm(registerFormFields);
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
-    startRegister({ name, email, password, lastName, CI, phoneNumber })
+
+    // Verifica que todos los campos requeridos estén completos
+    if (!name || !lastName || !CI || !phoneNumber || !email || !password) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Campos Incompletos',
+        text: 'Por favor, completa todos los campos antes de registrarte.',
+      });
+      return;
+    }
+
+    try {
+      await startRegister({ name, email, password, lastName, CI, phoneNumber });
+      Swal.fire({
+        icon: 'success',
+        title: 'Registro Exitoso',
+        text: 'Tu cuenta ha sido creada con éxito.',
+      });
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error en el Registro',
+        text: 'Hubo un problema al crear tu cuenta. Por favor, intenta de nuevo.',
+      });
+    }
   }
 
   return (
@@ -136,8 +161,6 @@ export default function SignUp() {
         <br />
 
       </Container>
-
-
     </ThemeProvider>
   );
 }

@@ -14,6 +14,8 @@ import LogoutIcon from '@mui/icons-material/Logout';
 
 import { useAuthStore } from "@/hooks/useAuthStore";
 
+import withAuth from "@/helpers/withAuth";
+
 // Importar aquí la lógica para interactuar con la tabla InscriptionRequest según tu entorno y herramientas (por ejemplo, Axios, GraphQL, etc.)
 
 const links = [
@@ -139,4 +141,4 @@ const ServicioEstudiantes = () => {
     );
 };
 
-export default ServicioEstudiantes;
+export default withAuth (ServicioEstudiantes,['AdminServicio']);

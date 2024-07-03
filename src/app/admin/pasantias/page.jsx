@@ -13,6 +13,8 @@ import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useAuthStore } from "@/hooks/useAuthStore";
 
+import withAuth from "@/helpers/withAuth";
+
 const links = [
   { text: 'Estudiantes', icon: <PeopleAltIcon />, route: RouterLinks.admin.pasantias.PasantiasEstudiantes },
   { text: 'Salir', icon: <LogoutIcon />, route: "/" },
@@ -134,4 +136,4 @@ const PasantiasEstudiantes = () => {
   );
 };
 
-export default PasantiasEstudiantes;
+export default withAuth (PasantiasEstudiantes,['AdminPasantias']);

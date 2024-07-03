@@ -21,6 +21,8 @@ import ArticleIcon from "@mui/icons-material/Article";
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useAuthStore } from "@/hooks/useAuthStore";
 
+import withAuth from "@/helpers/withAuth";
+
 const links = [
   { text: 'Seguimiento', icon: <DashboardIcon />, route: RouterLinks.student.pasantias.PasantiasDashboard },
   { text: 'Documentos', icon: <ArticleIcon />, route: RouterLinks.student.pasantias.PasantiasDocument },
@@ -83,4 +85,4 @@ const pasantiasDocument = () => {
   );
 };
 
-export default pasantiasDocument;
+export default withAuth (pasantiasDocument,['User']);

@@ -20,6 +20,8 @@ import ArticleIcon from '@mui/icons-material/Article';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useAuthStore } from "@/hooks/useAuthStore";
 
+import withAuth from "@/helpers/withAuth";
+
 const links = [
   { text: 'Seguimiento', icon: <DashboardIcon />, route: RouterLinks.student.servicio.ServicioDashboard },
   { text: 'Documentos', icon: <ArticleIcon />, route: RouterLinks.student.servicio.ServicioDocument },
@@ -82,4 +84,5 @@ const ServicioDocument = () => {
   );
 };
 
-export default ServicioDocument;
+
+export default withAuth (ServicioDocument,['User']);

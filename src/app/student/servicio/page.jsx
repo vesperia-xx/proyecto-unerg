@@ -5,19 +5,23 @@ import CustomBox from "@/components/CustomBox";
 import TitleValue from "@/components/TitleValue";
 import ModalActivityServicio from "@/components/ModalActivityServicio";
 import ContextMenu from "@/components/ContextMenu";
+
 import { Add as AddIcon, GetApp as GetAppIcon } from '@mui/icons-material';
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import { Grid, Typography, Button } from '@mui/material';
+
 import TableStyled from "@/components/TableStyled";
 import Sidebar from "@/components/Sidebar";
 import RouterLinks from "@/routes/RouterLinks";
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ArticleIcon from "@mui/icons-material/Article";
 import LogoutIcon from '@mui/icons-material/Logout';
+
 import { generateQRCode } from "@/components/GenerateQRCode";
 import { createPDF } from "@/components/CreatePDF";
 import { ActaPDF } from "@/components/ActaPDF";
 import { useAuthStore } from "@/hooks/useAuthStore";
+import withAuth from "@/helpers/withAuth";
 
 const links = [
   { text: 'Seguimiento', icon: <DashboardIcon />, route: RouterLinks.student.servicio.ServicioDashboard },
@@ -277,5 +281,4 @@ const ServicioDashboard = () => {
   );
 };
 
-export default ServicioDashboard;
-
+export default withAuth (ServicioDashboard,['User']);
