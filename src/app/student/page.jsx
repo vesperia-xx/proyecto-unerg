@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
@@ -7,20 +7,16 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import { useAuthStore } from "@/hooks/useAuthStore";
-
 import Sidebar from "@/components/Sidebar";
 import ServiceModal from "@/components/ServiceModal";
-import PasantiasModal from "@/components/PasantiasModal ";
 import PageTemplate from "@/components/PageTemplate";
-
 import RouterLinks from "@/routes/RouterLinks";
-
 import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
-
 import Swal from "sweetalert2";
-
 import withAuth from "@/helpers/withAuth";
+import { usePasantiasStore } from "@/hooks/usePasantiasStore";
+import PasantiasModal from "@/components/PasantiasModal ";
 
 const links = [
     { text: 'Mi perfil', icon: <PersonIcon />, route: RouterLinks.student.StudentDashboard },
@@ -28,15 +24,33 @@ const links = [
 ];
 
 const DashboardStudent = () => {
-
-    const { user } = useAuthStore();
-
-    const { startLogout } = useAuthStore(); // Obtén la función startLogout del hook useAuthStore
+    const { user, startLogout } = useAuthStore();
+    const { getPasantias, pasantias } = usePasantiasStore();
 
     const [isServiceRegistered, setIsServiceRegistered] = useState(false);
     const [isPasantiasRegistered, setIsPasantiasRegistered] = useState(false);
     const [openServiceModal, setOpenServiceModal] = useState(false);
     const [openPasantiasModal, setOpenPasantiasModal] = useState(false);
+
+    // Estado local para manejar la carga de datos
+    const [dataLoaded, setDataLoaded] = useState(false);
+
+    useEffect(() => {
+        const checkPasantiasRegistration = async () => {
+            await getPasantias();
+            setDataLoaded(true); // Marcar como cargado después de obtener los datos
+        };
+
+        checkPasantiasRegistration();
+    }, [getPasantias]);
+
+    useEffect(() => {
+        if (dataLoaded && pasantias?.length > 0) {
+            if (pasantias.some(pasantia => pasantia.user === user.uid)) {
+                setIsPasantiasRegistered(true);
+            }
+        }
+    }, [dataLoaded, pasantias, user.uid]);
 
     const handleOpenServiceModal = () => {
         setOpenServiceModal(true);
@@ -60,8 +74,8 @@ const DashboardStudent = () => {
     };
 
     const handlePasantiasRegistered = () => {
-        setIsPasantiasRegistered(true);
-        handleClosePasantiasModal();
+        setIsPasantiasRegistered(true); // Marca que las pasantías están registradas
+        setOpenPasantiasModal(false); // Cierra el modal de pasantías
     };
 
     const handleFailedRegistration = () => {
@@ -73,7 +87,7 @@ const DashboardStudent = () => {
     };
 
     const handleLogout = () => {
-        startLogout(); // Llama a la función startLogout al hacer clic en Salir
+        startLogout();
     };
 
     return (
@@ -83,7 +97,7 @@ const DashboardStudent = () => {
                     title="Estudiante"
                     links={links}
                     profileName={`${user.name} ${user.lastName}`}
-                    handleLogout={handleLogout} // Pasa la función handleLogout al Sidebar
+                    handleLogout={handleLogout}
                     profileImage={user.avatarUrl || "/perfil.jpg"}
                 />
                 <Grid container spacing={2} className="dashboard-links">
@@ -139,11 +153,10 @@ const DashboardStudent = () => {
                     open={openPasantiasModal}
                     onClose={handleClosePasantiasModal}
                     onRegister={handlePasantiasRegistered}
-                    onError={handleFailedRegistration}
                 />
             </PageTemplate>
         </div>
     );
 };
 
-export default withAuth (DashboardStudent,['User']);
+export default withAuth(DashboardStudent, ['User']);
