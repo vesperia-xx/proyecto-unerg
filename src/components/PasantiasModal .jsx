@@ -1,3 +1,4 @@
+'use client'
 import React, { useState, useEffect } from "react";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
@@ -19,17 +20,20 @@ const pasantiasFormField = {
 };
 
 const PasantiasModal = ({ open, onClose, onRegister }) => {
-    const { title, empresa, tutorAcademico, tutorEmpresarial, onInputChange, formState, onResetForm } = useForm(pasantiasFormField);
-    const { startCrearPasantia, loading, error } = usePasantiasStore();
+    const { title, empresa, tutorAcademico, tutorEmpresarial, onInputChange, formState, setFormState, onResetForm } = useForm(pasantiasFormField);
+    const { startCrearPasantia, error } = usePasantiasStore(); // Eliminamos `loading`
     const [openAlert, setOpenAlert] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const { user } = useAuthStore();
 
     useEffect(() => {
         if (user?.uid) {
-            formState.user = user.uid; // Actualizamos el campo user directamente en formState
+            setFormState(prevState => ({
+                ...prevState,
+                user: user.uid
+            }));
         }
-    }, [user, formState]);
+    }, [user, setFormState]);
 
     const handleSave = async () => {
         if (!title || !empresa || !tutorAcademico || !tutorEmpresarial) {

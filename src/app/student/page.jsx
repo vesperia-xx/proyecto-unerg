@@ -18,6 +18,7 @@ import withAuth from "@/helpers/withAuth";
 import { usePasantiasStore } from "@/hooks/usePasantiasStore";
 import PasantiasModal from "@/components/PasantiasModal ";
 
+
 const links = [
     { text: 'Mi perfil', icon: <PersonIcon />, route: RouterLinks.student.StudentDashboard },
     { text: 'Salir', icon: <LogoutIcon />, route: "/" },
@@ -41,8 +42,10 @@ const DashboardStudent = () => {
             setDataLoaded(true); // Marcar como cargado después de obtener los datos
         };
 
-        checkPasantiasRegistration();
-    }, [getPasantias]);
+        if (!dataLoaded) {
+            checkPasantiasRegistration();
+        }
+    }, [dataLoaded, getPasantias]);
 
     useEffect(() => {
         if (dataLoaded && pasantias?.length > 0) {

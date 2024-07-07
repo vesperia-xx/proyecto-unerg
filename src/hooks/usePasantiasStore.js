@@ -1,4 +1,3 @@
-// hooks/usePasantiasStore.js
 import { useDispatch, useSelector } from "react-redux";
 import unergApi from "@/api/unergApi";
 import {
@@ -38,8 +37,8 @@ export const usePasantiasStore = () => {
         }
     };
 
-    // Nueva función para verificar si el usuario está registrado en alguna pasantía
     const isUserRegisteredInPasantias = (uid) => {
+        if (!pasantias) return false; // Verifica que `pasantias` no sea undefined o null
         return pasantias.some(pasantia => pasantia.user === uid);
     };
 
