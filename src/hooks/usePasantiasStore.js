@@ -8,12 +8,19 @@ import {
     getPasantiasStart,
     getPasantiasSuccess,
     getPasantiasFailure,
+    acceptRequestStart,
+    acceptRequestSuccess,
+    acceptRequestFailure,
+    rejectRequestStart,
+    rejectRequestSuccess,
+    rejectRequestFailure,
 } from "@/redux/slices/pasantiasSlice";
 
 export const usePasantiasStore = () => {
     const { loading, success, error, pasantia, pasantias } = useSelector(state => state.pasantias);
     const dispatch = useDispatch();
 
+    // Función para crear una nueva pasantía
     const startCrearPasantia = async (pasantiaData) => {
         dispatch(createPasantiaStart());
         try {
@@ -27,6 +34,7 @@ export const usePasantiasStore = () => {
         }
     };
 
+    // Función para obtener todas las pasantías
     const getPasantias = async () => {
         dispatch(getPasantiasStart());
         try {
@@ -37,6 +45,29 @@ export const usePasantiasStore = () => {
         }
     };
 
+    // Función para aceptar una solicitud de inscripción
+    const acceptRequest = async (requestId) => {
+        dispatch(acceptRequestStart());
+        try {
+            await unergApi.post(`http://localhost:4000/api/requests/accept/${requestId}`); // Cambia la ruta según tu backend
+            dispatch(acceptRequestSuccess(requestId));
+        } catch (error) {
+            dispatch(acceptRequestFailure(error.response?.data?.msg || 'Error al aceptar la solicitud'));
+        }
+    };
+
+    // Función para rechazar una solicitud de inscripción
+    const rejectRequest = async (requestId) => {
+        dispatch(rejectRequestStart());
+        try {
+            await unergApi.post(`http://localhost:4000/api/requests/reject/${requestId}`); // Cambia la ruta según tu backend
+            dispatch(rejectRequestSuccess(requestId));
+        } catch (error) {
+            dispatch(rejectRequestFailure(error.response?.data?.msg || 'Error al rechazar la solicitud'));
+        }
+    };
+
+    // Función para verificar si un usuario está registrado en pasantías
     const isUserRegisteredInPasantias = (uid) => {
         if (!pasantias) return false; // Verifica que `pasantias` no sea undefined o null
         return pasantias.some(pasantia => pasantia.user === uid);
@@ -50,6 +81,8 @@ export const usePasantiasStore = () => {
         pasantias,
         startCrearPasantia,
         getPasantias,
-        isUserRegisteredInPasantias, // Exporta la nueva función
+        acceptRequest,
+        rejectRequest,
+        isUserRegisteredInPasantias,
     };
 };

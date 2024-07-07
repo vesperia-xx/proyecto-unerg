@@ -5,6 +5,7 @@ import storage from 'redux-persist/lib/storage';
 import { persistReducer, persistStore } from 'redux-persist';
 import { combineReducers } from 'redux';
 import { pasantiasSlice } from './slices/pasantiasSlice';
+import { servicioSlice } from './slices/servicioSlice';
 
 
 const persistConfig = {
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   student: studentSlice.reducer,
   auth: authSlice.reducer,
   pasantias: pasantiasSlice.reducer,
+  servicio: servicioSlice.reducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

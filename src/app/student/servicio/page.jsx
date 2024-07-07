@@ -21,6 +21,7 @@ import { generateQRCode } from "@/components/GenerateQRCode";
 import { createPDF } from "@/components/CreatePDF";
 import { ActaPDF } from "@/components/ActaPDF";
 import { useAuthStore } from "@/hooks/useAuthStore";
+import { useServicioStore } from "@/hooks/useServicioStore";
 import withAuth from "@/helpers/withAuth";
 
 const links = [
@@ -30,7 +31,6 @@ const links = [
 ];
 
 const horasCumplir = 120;
-
 
 const servicioActivities = [
   {
@@ -63,7 +63,15 @@ const ServicioDashboard = () => {
   const { user } = useAuthStore();
 
   const [activities, setActivities] = useState(servicioActivities);
-  const [student, setStudent] = useState(studentServicio);
+  const [student, setStudent] = useState({
+    title: '',
+    empresa: '',
+    tutorAcademico: '',
+    tutorComunitario: '',
+    hour: 0,
+    estatus: 'Pendiente'
+  });
+
   const [totalHours, setTotalHours] = useState(studentServicio.hour);
   const [openModal, setOpenModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
@@ -72,18 +80,42 @@ const ServicioDashboard = () => {
   const [pdfUrl, setPdfUrl] = useState(null);
   const [previewOpen, setPreviewOpen] = useState(false);
 
+  const { loading, error, servicios, getServicios } = useServicioStore(); 
+
+  useEffect(() => {
+    getServicios();
+  }, [getServicios]);
+
+  useEffect(() => {
+    if (!loading && !error && servicios && servicios.length > 0) {
+      const userServicio = servicios.find(servicio => servicio.user === user.uid); // Filtrar servicio del usuario actual
+      if (userServicio) {
+        const { title, empresa, tutorAcademico, tutorComunitario, hour, status } = userServicio;
+        setStudent({
+          title,
+          empresa,
+          tutorAcademico,
+          tutorComunitario,
+          hour,
+          estatus: status || 'Pendiente' // Asegurarse de que el estatus tenga un valor inicial
+        });
+      }
+    }
+  }, [loading, error, servicios, user.uid]);
+
   useEffect(() => {
     const newTotalHours = activities.reduce((total, activity) => total + (+activity.hours), 0);
     setTotalHours(newTotalHours);
     if (newTotalHours >= 120) {
       setCanDownloadCarta(true);
+      setStudent(prevStudent => ({
+        ...prevStudent,
+        estatus: 'Completado'
+      }));
     } else {
       setCanDownloadCarta(false);
     }
-    if (newTotalHours >= 120 && student.estatus !== 'Completado') {
-      setStudent(prevStudent => ({ ...prevStudent, estatus: 'Completado' }));
-    }
-  }, [activities, student.estatus]);
+  }, [activities]);
 
   const handleDeleteActivity = (activityId) => {
     const updatedActivities = activities.filter(activity => activity.id !== activityId);
@@ -135,6 +167,7 @@ const ServicioDashboard = () => {
       const qrCodeDataUrl = await generateQRCode(`Nombre: ${user.name} ${user.lastName}\nCI: ${user.CI}\nTotal Horas: ${totalHours}`);
       const pdfBytes = await createPDF(user, qrCodeDataUrl);
       if (pdfBytes instanceof Blob) {
+        // Implementar lógica para previsualizar el PDF si es necesario
       } else {
         console.error('Error: PDF creation returned invalid data.');
       }
@@ -183,7 +216,7 @@ const ServicioDashboard = () => {
               <CustomBox>
                 <Typography variant="h6" gutterBottom>Horas</Typography>
                 <TitleValue title="Horas a Cumplir" value={horasCumplir} />
-                <TitleValue title="Total Acumulado" value={activities.reduce((total, activity) => total + parseInt(activity.hours), 0)} />
+                <TitleValue title="Total Acumulado" value={totalHours} />
                 <TitleValue title="Estatus" value={student.estatus} />
               </CustomBox>
             </Grid>
@@ -213,7 +246,6 @@ const ServicioDashboard = () => {
               Descargar acta de conclusión
             </Button>
           </div>
-
         </Grid>
       </Grid>
 
@@ -281,4 +313,4 @@ const ServicioDashboard = () => {
   );
 };
 
-export default withAuth (ServicioDashboard,['User']);
+export default withAuth(ServicioDashboard, ['User']);

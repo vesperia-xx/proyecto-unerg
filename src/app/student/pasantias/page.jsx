@@ -50,7 +50,9 @@ const pasantiasActivities = [
   },
 ];
 
+const estatus = {
 
+}
 
 //Actividades
 const PasantiasDashboard = () => {
@@ -61,7 +63,7 @@ const PasantiasDashboard = () => {
     tutorAcademico: '',
     tutorEmpresarial: '',
     hour: 0,
-    estatus: ''
+    estatus: 'pendiente'
   })
   const [totalHours, setTotalHours] = useState(student.hour);
   const [openModal, setOpenModal] = useState(false);
@@ -80,14 +82,13 @@ const PasantiasDashboard = () => {
     if (!loading && !error && pasantias && pasantias.length > 0) {
       const userPasantia = pasantias.find(pasantia => pasantia.user === user.uid); // Filtrar pasantía del usuario actual
       if (userPasantia) {
-        const { title, empresa, tutorAcademico, tutorEmpresarial, hour, status } = userPasantia;
+        const { title, empresa, tutorAcademico, tutorEmpresarial, hour } = userPasantia;
         setStudent({
           title,
           empresa,
           tutorAcademico,
           tutorEmpresarial,
           hour,
-          estatus: status
         });
       }
     }

@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Button from "@mui/material/Button";
@@ -18,7 +18,7 @@ import withAuth from "@/helpers/withAuth";
 import { usePasantiasStore } from "@/hooks/usePasantiasStore";
 import PasantiasModal from "@/components/PasantiasModal ";
 
-
+// Definición de enlaces para la barra lateral
 const links = [
     { text: 'Mi perfil', icon: <PersonIcon />, route: RouterLinks.student.StudentDashboard },
     { text: 'Salir', icon: <LogoutIcon />, route: "/" },
@@ -26,7 +26,7 @@ const links = [
 
 const DashboardStudent = () => {
     const { user, startLogout } = useAuthStore();
-    const { getPasantias, pasantias } = usePasantiasStore();
+    const { getPasantias, pasantias, getServicio, servicio } = usePasantiasStore();  // Añadido `servicio` para comprobar datos del servicio
 
     const [isServiceRegistered, setIsServiceRegistered] = useState(false);
     const [isPasantiasRegistered, setIsPasantiasRegistered] = useState(false);
@@ -37,15 +37,21 @@ const DashboardStudent = () => {
     const [dataLoaded, setDataLoaded] = useState(false);
 
     useEffect(() => {
-        const checkPasantiasRegistration = async () => {
-            await getPasantias();
-            setDataLoaded(true); // Marcar como cargado después de obtener los datos
+        const checkRegistrations = async () => {
+            try {
+                await getPasantias();
+                await getServicio();  // Asegúrate de llamar a `getServicio`
+                setDataLoaded(true);  // Marcar como cargado después de obtener los datos
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                setDataLoaded(true);  // Asegurarse de que la carga de datos se complete
+            }
         };
 
         if (!dataLoaded) {
-            checkPasantiasRegistration();
+            checkRegistrations();
         }
-    }, [dataLoaded, getPasantias]);
+    }, [dataLoaded, getPasantias, getServicio]);
 
     useEffect(() => {
         if (dataLoaded && pasantias?.length > 0) {
@@ -55,21 +61,17 @@ const DashboardStudent = () => {
         }
     }, [dataLoaded, pasantias, user.uid]);
 
-    const handleOpenServiceModal = () => {
-        setOpenServiceModal(true);
-    };
+    useEffect(() => {
+        if (dataLoaded && servicio?.user === user.uid) {  // Verifica si hay datos de servicio para el usuario
+            setIsServiceRegistered(true);
+        }
+    }, [dataLoaded, servicio, user.uid]);
 
-    const handleCloseServiceModal = () => {
-        setOpenServiceModal(false);
-    };
-
-    const handleOpenPasantiasModal = () => {
-        setOpenPasantiasModal(true);
-    };
-
-    const handleClosePasantiasModal = () => {
-        setOpenPasantiasModal(false);
-    };
+    // Funciones de manejo de modales
+    const handleOpenServiceModal = () => setOpenServiceModal(true);
+    const handleCloseServiceModal = () => setOpenServiceModal(false);
+    const handleOpenPasantiasModal = () => setOpenPasantiasModal(true);
+    const handleClosePasantiasModal = () => setOpenPasantiasModal(false);
 
     const handleServiceRegistered = () => {
         setIsServiceRegistered(true);
@@ -78,7 +80,7 @@ const DashboardStudent = () => {
 
     const handlePasantiasRegistered = () => {
         setIsPasantiasRegistered(true); // Marca que las pasantías están registradas
-        setOpenPasantiasModal(false); // Cierra el modal de pasantías
+        handleClosePasantiasModal(); // Cierra el modal de pasantías
     };
 
     const handleFailedRegistration = () => {
@@ -94,72 +96,73 @@ const DashboardStudent = () => {
     };
 
     return (
-        <div>
-            <PageTemplate>
-                <Sidebar
-                    title="Estudiante"
-                    links={links}
-                    profileName={`${user.name} ${user.lastName}`}
-                    handleLogout={handleLogout}
-                    profileImage={user.avatarUrl || "/perfil.jpg"}
-                />
-                <Grid container spacing={2} className="dashboard-links">
-                    <Grid item xs={12} sm={6}>
-                        <Card>
-                            <CardContent style={{ textAlign: 'center' }}>
-                                <Typography variant="h5" component="h2" gutterBottom>
-                                    Pasantias
-                                </Typography>
-                                {isPasantiasRegistered ? (
-                                    <Link href={RouterLinks.student.pasantias.PasantiasDashboard}>
-                                        <Button variant="contained" color="primary" fullWidth>
-                                            Ir a Pasantias
-                                        </Button>
-                                    </Link>
-                                ) : (
-                                    <Button variant="contained" color="primary" fullWidth onClick={handleOpenPasantiasModal}>
-                                        Comenzar
+        <PageTemplate>
+            <Sidebar
+                title="Estudiante"
+                links={links}
+                profileName={`${user.name} ${user.lastName}`}
+                handleLogout={handleLogout}
+                profileImage={user.avatarUrl || "/perfil.jpg"}
+            />
+            <Grid container spacing={2} className="dashboard-links">
+                <Grid item xs={12} sm={6}>
+                    <Card>
+                        <CardContent style={{ textAlign: 'center' }}>
+                            <Typography variant="h5" component="h2" gutterBottom>
+                                Pasantias
+                            </Typography>
+                            {isPasantiasRegistered ? (
+                                <Link href={RouterLinks.student.pasantias.PasantiasDashboard}>
+                                    <Button variant="contained" color="primary" fullWidth>
+                                        Ir a Pasantias
                                     </Button>
-                                )}
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <Card>
-                            <CardContent style={{ textAlign: 'center' }}>
-                                <Typography variant="h5" component="h2" gutterBottom>
-                                    Servicio Comunitario
-                                </Typography>
-                                {isServiceRegistered ? (
-                                    <Link href={RouterLinks.student.servicio.ServicioDashboard}>
-                                        <Button variant="contained" color="primary" fullWidth>
-                                            Ir a Servicio
-                                        </Button>
-                                    </Link>
-                                ) : (
-                                    <Button variant="contained" color="primary" fullWidth onClick={handleOpenServiceModal}>
-                                        Comenzar
-                                    </Button>
-                                )}
-                            </CardContent>
-                        </Card>
-                    </Grid>
+                                </Link>
+                            ) : (
+                                <Button variant="contained" color="primary" fullWidth onClick={handleOpenPasantiasModal}>
+                                    Comenzar
+                                </Button>
+                            )}
+                        </CardContent>
+                    </Card>
                 </Grid>
+                <Grid item xs={12} sm={6}>
+                    <Card>
+                        <CardContent style={{ textAlign: 'center' }}>
+                            <Typography variant="h5" component="h2" gutterBottom>
+                                Servicio Comunitario
+                            </Typography>
+                            {isServiceRegistered ? (
+                                <Link href={RouterLinks.student.servicio.ServicioDashboard}>
+                                    <Button variant="contained" color="primary" fullWidth>
+                                        Ir a Servicio
+                                    </Button>
+                                </Link>
+                            ) : (
+                                <Button variant="contained" color="primary" fullWidth onClick={handleOpenServiceModal}>
+                                    Comenzar
+                                </Button>
+                            )}
+                        </CardContent>
+                    </Card>
+                </Grid>
+            </Grid>
 
-                <ServiceModal
-                    open={openServiceModal}
-                    onClose={handleCloseServiceModal}
-                    onRegister={handleServiceRegistered}
-                    onError={handleFailedRegistration}
-                />
-                <PasantiasModal
-                    open={openPasantiasModal}
-                    onClose={handleClosePasantiasModal}
-                    onRegister={handlePasantiasRegistered}
-                />
-            </PageTemplate>
-        </div>
+            <ServiceModal
+                open={openServiceModal}
+                onClose={handleCloseServiceModal}
+                onRegister={handleServiceRegistered}
+                onError={handleFailedRegistration}
+            />
+            <PasantiasModal
+                open={openPasantiasModal}
+                onClose={handleClosePasantiasModal}
+                onRegister={handlePasantiasRegistered}
+            />
+        </PageTemplate>
     );
 };
 
 export default withAuth(DashboardStudent, ['User']);
+
+
+

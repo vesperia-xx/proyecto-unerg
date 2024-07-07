@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+'use client'
+import React, { useState, useEffect } from "react";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
@@ -7,39 +8,58 @@ import { useForm } from "@/hooks/useForm";
 import Alert from "@mui/material/Alert";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Swal from "sweetalert2";
+import { useServicioStore } from "@/hooks/useServicioStore";
+import { useAuthStore } from "@/hooks/useAuthStore";
 
 const serviceFormField = {
     title: '',
     empresa: '',
     tutorAcademico: '',
     tutorComunitario: '',
+    user: '',
 }
 
 const ServiceModal = ({ open, onClose, onRegister }) => {
-    const { title, empresa, tutorAcademico, tutorComunitario, onInputChange } = useForm(serviceFormField);
+    const { title, empresa, tutorAcademico, tutorComunitario, onInputChange, formState, setFormState, onResetForm } = useForm(serviceFormField);
+    const { startCrearServicio, error } = useServicioStore();
     const [openAlert, setOpenAlert] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
+    const { user } = useAuthStore();
 
-    const handleSave = () => {
+    useEffect(() => {
+        if (user?.uid) {
+            setFormState(prevState => ({
+                ...prevState,
+                user: user.uid
+            }));
+        }
+    }, [user, setFormState]);
+    
+    const handleSave = async () => {
         if (!title || !empresa || !tutorAcademico || !tutorComunitario) {
             setOpenAlert(true);
             return;
         }
 
-        console.log({ title, empresa, tutorAcademico, tutorComunitario });
-
-        setTimeout(() => {
-            Swal.fire({
-                icon: 'success',
-                title: 'Registro exitoso',
-                text: 'Te has registrado en el servicio comunitario correctamente.',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    onRegister();
-                    onClose();
-                }
-            });
-        }, 500);
+        try {
+            await startCrearServicio(formState);
+            setShowConfirmation(true);
+            setTimeout(() => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Registro exitoso',
+                    text: 'Te has registrado al servicio correctamente.',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        onRegister();
+                        onResetForm();
+                        onClose(); // Cierra el modal al confirmar el registro exitoso
+                    }
+                });
+            }, 500);
+        } catch (error) {
+            console.error('Error al crear el servicio:', error);
+        }
     };
 
     return (
@@ -100,6 +120,7 @@ const ServiceModal = ({ open, onClose, onRegister }) => {
                 <Button variant="contained" color="primary" fullWidth onClick={handleSave}>
                     Guardar
                 </Button>
+                {error && <Alert severity="error" style={{ marginTop: 20 }}>{error}</Alert>}
             </div>
         </Modal>
     );
