@@ -20,8 +20,10 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import ArticleIcon from "@mui/icons-material/Article";
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useAuthStore } from "@/hooks/useAuthStore";
+import { usePasantiasStore } from "@/hooks/usePasantiasStore";
 
 import withAuth from "@/helpers/withAuth";
+import { studentSlice } from "@/redux/slices/studentSlice";
 
 const links = [
   { text: 'Seguimiento', icon: <DashboardIcon />, route: RouterLinks.student.pasantias.PasantiasDashboard },
@@ -48,26 +50,48 @@ const pasantiasActivities = [
   },
 ];
 
-const studentPasantias = {
-  title: 'proyecto bigchungo',
-  empresa: 'FUPAGUA',
-  tutorAcademico: 'Adriana Roa',
-  tutorEmpresarial: 'Melissa Farfan',
-  hour: 0,
-  estatus: 'Pendiente'
-};
+
 
 //Actividades
 const PasantiasDashboard = () => {
   const [activities, setActivities] = useState(pasantiasActivities);
-  const [student, setStudent] = useState(studentPasantias);
-  const [totalHours, setTotalHours] = useState(studentPasantias.hour);
+  const [student, setStudent] = useState({
+    title: '',
+    empresa: '',
+    tutorAcademico: '',
+    tutorEmpresarial: '',
+    hour: 0,
+    estatus: ''
+  })
+  const [totalHours, setTotalHours] = useState(student.hour);
   const [openModal, setOpenModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [editedActivity, setEditedActivity] = useState(null);
   const [canDownload, setCanDownload] = useState(false);
 
   const { user } = useAuthStore();
+  const { loading, error, pasantias, getPasantias } = usePasantiasStore(); 
+
+  useEffect(() => {
+    getPasantias();
+  }, [getPasantias]);
+
+  useEffect(() => {
+    if (!loading && !error && pasantias && pasantias.length > 0) {
+      const userPasantia = pasantias.find(pasantia => pasantia.user === user.uid); // Filtrar pasantía del usuario actual
+      if (userPasantia) {
+        const { title, empresa, tutorAcademico, tutorEmpresarial, hour, status } = userPasantia;
+        setStudent({
+          title,
+          empresa,
+          tutorAcademico,
+          tutorEmpresarial,
+          hour,
+          estatus: status
+        });
+      }
+    }
+  }, [loading, error, pasantias, user.uid]);
 
   //Horas
   useEffect(() => {
@@ -147,9 +171,9 @@ const PasantiasDashboard = () => {
                 <Typography variant="h6" gutterBottom>Datos del Estudiante</Typography>
                 <TitleValue title="Nombre y Apellido" value={`${user.name} ${user.lastName}`} />
                 <TitleValue title="Cedula" value={user.CI} />
-                <TitleValue title="Empresa" value={studentPasantias.empresa} />
-                <TitleValue title="Tutor Academico" value={studentPasantias.tutorAcademico} />
-                <TitleValue title="Tutor Empresarial" value={studentPasantias.tutorEmpresarial} />
+                <TitleValue title="Empresa" value={student.empresa} />
+                <TitleValue title="Tutor Academico" value={student.tutorAcademico} />
+                <TitleValue title="Tutor Empresarial" value={student.tutorEmpresarial} />
               </CustomBox>
             </Grid>
           </Grid>
