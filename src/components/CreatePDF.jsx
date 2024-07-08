@@ -1,6 +1,6 @@
 import jsPDF from 'jspdf';
 
-export const createPDF = (user, qrCodeImageUrl) => {
+export const createPDF = (user, student, qrCodeImageUrl) => {
     // Crear un nuevo documento jsPDF en orientación portrait, unidades cm, y formato A4
     const doc = new jsPDF({
         orientation: 'portrait',
@@ -45,7 +45,7 @@ export const createPDF = (user, qrCodeImageUrl) => {
 
         // Cuerpo del texto
         doc.setFontSize(12);
-        const bodyText = `Quienes suscriben, hacen constar por medio de la presente que el ciudadano Bachiller: ${user.name} ${user.lastName}, titular de la Cédula de Identidad N° ${user.CI}, estudiante del Área de Ingeniería de Sistemas, CULMINÓ las actividades inherentes a la prestación del Servicio Comunitario según lo establecido en la LEY DE SERVICIO COMUNITARIO DEL ESTUDIANTE DE EDUCACIÓN SUPERIOR y sus REGLAMENTOS, a través de la ejecución del Proyecto: "${studentData.projectTitle}", en la fundación: ${studentData.foundation} con el apoyo de la Tutora Académica: ${studentData.academicTutor}.`;
+        const bodyText = `Quienes suscriben, hacen constar por medio de la presente que el ciudadano Bachiller: ${user.name} ${user.lastName}, titular de la Cédula de Identidad N° ${user.CI}, estudiante del Área de Ingeniería de Sistemas, CULMINÓ las actividades inherentes a la prestación del Servicio Comunitario según lo establecido en la LEY DE SERVICIO COMUNITARIO DEL ESTUDIANTE DE EDUCACIÓN SUPERIOR y sus REGLAMENTOS, a través de la ejecución del Proyecto: "${student.title}", en la fundación: ${student.empresa} con el apoyo de el tutor Académico: ${student.tutorAcademico}.`;
         doc.text(bodyText, margin, 8 + margin, { maxWidth: 21 - 2 * margin, align: 'justify' });
 
         // Texto del pie de página

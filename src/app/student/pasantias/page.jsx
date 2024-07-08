@@ -23,7 +23,7 @@ import { useAuthStore } from "@/hooks/useAuthStore";
 import { usePasantiasStore } from "@/hooks/usePasantiasStore";
 
 import withAuth from "@/helpers/withAuth";
-import { studentSlice } from "@/redux/slices/studentSlice";
+import localforage from 'localforage'; // Importar localforage
 
 const links = [
   { text: 'Seguimiento', icon: <DashboardIcon />, route: RouterLinks.student.pasantias.PasantiasDashboard },
@@ -31,52 +31,44 @@ const links = [
   { text: 'Salir', icon: <LogoutIcon />, route: '/' },
 ];
 
-const horasCumplir = 320
-
-const pasantiasActivities = [
-  {
-    id: 'activity_1',
-    activity: 'Actividad 1',
-    startDate: '2024-04-01',
-    endDate: '2024-04-10',
-    hours: 40
-  },
-  {
-    id: 'activity_2',
-    activity: 'Actividad 2',
-    startDate: '2024-04-12',
-    endDate: '2024-04-20',
-    hours: 30
-  },
-];
+const horasCumplir = 320;
 
 const estatus = {
-
+  estatus: 'Pendiente',
 }
 
-//Actividades
 const PasantiasDashboard = () => {
-  const [activities, setActivities] = useState(pasantiasActivities);
+  const [activities, setActivities] = useState([]);  // Inicializar con un array vacío
   const [student, setStudent] = useState({
     title: '',
     empresa: '',
     tutorAcademico: '',
     tutorEmpresarial: '',
     hour: 0,
-    estatus: 'pendiente'
-  })
-  const [totalHours, setTotalHours] = useState(student.hour);
+    estatus: estatus.estatus
+  });
+  const [totalHours, setTotalHours] = useState(0);
   const [openModal, setOpenModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [editedActivity, setEditedActivity] = useState(null);
   const [canDownload, setCanDownload] = useState(false);
 
   const { user } = useAuthStore();
-  const { loading, error, pasantias, getPasantias } = usePasantiasStore(); 
+  const { loading, error, pasantias, getPasantias } = usePasantiasStore();
 
   useEffect(() => {
+    if (!user || !user.uid) return; // Asegúrate de que user esté definido
     getPasantias();
-  }, [getPasantias]);
+  }, [getPasantias, user]);
+
+  useEffect(() => {
+    if (!user || !user.uid) return; // Verifica que el usuario esté disponible
+    const fetchActivities = async () => {
+      const storedActivities = await localforage.getItem(`activities_${user.uid}`) || [];  // Usar un ID único para cada usuario
+      setActivities(storedActivities);
+    };
+    fetchActivities();
+  }, [user]);
 
   useEffect(() => {
     if (!loading && !error && pasantias && pasantias.length > 0) {
@@ -89,42 +81,42 @@ const PasantiasDashboard = () => {
           tutorAcademico,
           tutorEmpresarial,
           hour,
+          estatus: hour >= horasCumplir ? 'Completado' : estatus.estatus // Actualizar estatus según las horas
         });
       }
     }
-  }, [loading, error, pasantias, user.uid]);
+  }, [loading, error, pasantias, user.uid, user]);
 
-  //Horas
   useEffect(() => {
     const newTotalHours = activities.reduce((total, activity) => total + (+activity.hours), 0);
     setTotalHours(newTotalHours);
-    if (newTotalHours >= 320) {
-      setCanDownload(true);
-    } else {
-      setCanDownload(false);
-    }
-    // Actualizar el estatus
-    if (newTotalHours >= 320 && student.estatus !== 'Completado') {
-      setStudent(prevStudent => ({ ...prevStudent, estatus: 'Completado' }));
-    }
-  }, [activities, student.estatus]);
+    setCanDownload(newTotalHours >= horasCumplir);
 
-  //Borrar actividad
-  const handleDeleteActivity = (activityId) => {
+    // Guardar actividades en localforage, filtradas por el ID del usuario
+    const saveActivities = async () => {
+      await localforage.setItem(`activities_${user.uid}`, activities); // Actualizar localforage
+    };
+    saveActivities();
+  }, [activities, user.uid]);
+
+  // Cambiado a estatus constante
+  const currentEstatus = totalHours >= horasCumplir ? 'Completado' : estatus.estatus;
+
+  const handleDeleteActivity = async (activityId) => {
     const updatedActivities = activities.filter(activity => activity.id !== activityId);
     setActivities(updatedActivities);
+    // Actualizar localforage
+    await localforage.setItem(`activities_${user.uid}`, updatedActivities);
   };
 
-  //Editar pdf
   const handleEditActivity = (activityId) => {
     const editedActivity = activities.find(activity => activity.id === activityId);
     setEditedActivity(editedActivity);
     setOpenEditModal(true);
   };
 
-  //Modal
   const handleOpenModal = () => {
-    if (student.estatus !== 'Completado') {
+    if (currentEstatus !== 'Completado') {
       setOpenModal(true);
     }
   };
@@ -137,16 +129,17 @@ const PasantiasDashboard = () => {
     setOpenEditModal(false);
   };
 
-  const handleAddActivity = (newActivity) => {
-    // No permitir agregar actividades si el estatus es 'Completado'
-    if (student.estatus !== 'Completado') {
-      const updatedActivities = [...activities, newActivity];
+  const handleAddActivity = async (newActivity) => {
+    if (currentEstatus !== 'Completado') {
+      const updatedActivities = [...activities, { ...newActivity, userId: user.uid }];  // Añadir userId a la nueva actividad
       setActivities(updatedActivities);
       setOpenModal(false);
+      // Actualizar localforage
+      await localforage.setItem(`activities_${user.uid}`, updatedActivities);
     }
   };
 
-  const handleEditActivitySubmit = (editedActivity) => {
+  const handleEditActivitySubmit = async (editedActivity) => {
     const updatedActivities = activities.map(activity => {
       if (activity.id === editedActivity.id) {
         return editedActivity;
@@ -156,13 +149,18 @@ const PasantiasDashboard = () => {
     });
     setActivities(updatedActivities);
     setOpenEditModal(false);
+    // Actualizar localforage
+    await localforage.setItem(`activities_${user.uid}`, updatedActivities);
   };
 
   return (
     <PageTemplate>
-      <Sidebar title="Estudiante Pasantias" links={links}
+      <Sidebar
+        title="Estudiante Pasantias"
+        links={links}
         profileName={`${user.name} ${user.lastName}`}
-        profileImage={user.avatarUrl || "/perfil.jpg"} />
+        profileImage={user.avatarUrl || "/perfil.jpg"}
+      />
 
       <Grid container spacing={3}>
         <Grid item xs={12} md={7}>
@@ -186,13 +184,11 @@ const PasantiasDashboard = () => {
               <CustomBox>
                 <Typography variant="h6" gutterBottom>Horas</Typography>
                 <TitleValue title="Horas a Cumplir" value={horasCumplir} />
-                <TitleValue title="Total Acumulado" value={activities.reduce((total, activity) => total + parseInt(activity.hours), 0)} />
-                <TitleValue title="Estatus" value={student.estatus} />
+                <TitleValue title="Total Acumulado" value={totalHours} />
+                <TitleValue title="Estatus" value={currentEstatus} />
               </CustomBox>
             </Grid>
           </Grid>
-
-
         </Grid>
       </Grid>
       <Grid container spacing={1} style={{ marginBottom: 10, marginTop: 10 }}>
@@ -211,7 +207,7 @@ const PasantiasDashboard = () => {
           color="primary"
           startIcon={<AddIcon />}
           onClick={handleOpenModal}
-          disabled={student.estatus === 'Completado' || canDownload}
+          disabled={currentEstatus === 'Completado' || canDownload}
         >
           Agregar nueva actividad
         </Button>
@@ -244,7 +240,7 @@ const PasantiasDashboard = () => {
                     onDelete={() => handleDeleteActivity(activity.id)}
                     onEdit={() => handleEditActivity(activity.id)}
                     canDownload={canDownload}
-                    studentStatus={student.estatus}
+                    studentStatus={currentEstatus}
                   />
                 </TableCell>
               </TableRow>
@@ -259,4 +255,7 @@ const PasantiasDashboard = () => {
   );
 };
 
-export default withAuth (PasantiasDashboard,['User']);
+export default withAuth(PasantiasDashboard, ['User']);
+
+
+

@@ -24,6 +24,8 @@ import { useAuthStore } from "@/hooks/useAuthStore";
 import { useServicioStore } from "@/hooks/useServicioStore";
 import withAuth from "@/helpers/withAuth";
 
+import localforage from 'localforage'; // Importa localforage
+
 const links = [
   { text: 'Seguimiento', icon: <DashboardIcon />, route: RouterLinks.student.servicio.ServicioDashboard },
   { text: 'Documentos', icon: <ArticleIcon />, route: RouterLinks.student.servicio.ServicioDocument },
@@ -32,47 +34,22 @@ const links = [
 
 const horasCumplir = 120;
 
-const servicioActivities = [
-  {
-    id: 'activity_1',
-    activity: 'Actividad 1',
-    week: 1,
-    date: '2024-04-01',
-    hours: 40
-  },
-  {
-    id: 'activity_2',
-    activity: 'Actividad 2',
-    week: 2,
-    date: '2024-04-12',
-    hours: 30
-  },
-];
-
-const studentServicio = {
-  title: 'proyecto bigchungo',
-  empresa: 'FUPAGUA',
-  tutorAcademico: 'Adriana Roa',
-  tutorComunitario: 'Melissa Farfan',
-  hour: 0,
-  estatus: 'Pendiente'
-};
+const estatus = {
+  estatus: 'Pendiente',
+}
 
 const ServicioDashboard = () => {
-
   const { user } = useAuthStore();
-
-  const [activities, setActivities] = useState(servicioActivities);
+  const [activities, setActivities] = useState([]);  // Inicializar con un array vacío
   const [student, setStudent] = useState({
     title: '',
     empresa: '',
     tutorAcademico: '',
     tutorComunitario: '',
     hour: 0,
-    estatus: 'Pendiente'
   });
 
-  const [totalHours, setTotalHours] = useState(studentServicio.hour);
+  const [totalHours, setTotalHours] = useState(0);
   const [openModal, setOpenModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [editedActivity, setEditedActivity] = useState(null);
@@ -80,13 +57,26 @@ const ServicioDashboard = () => {
   const [pdfUrl, setPdfUrl] = useState(null);
   const [previewOpen, setPreviewOpen] = useState(false);
 
-  const { loading, error, servicios, getServicios } = useServicioStore(); 
+  const { loading, error, servicios, getServicios } = useServicioStore();
 
   useEffect(() => {
+    if (!user || !user.uid) return; // Asegúrate de que user esté definido
     getServicios();
-  }, [getServicios]);
+  }, [getServicios, user]);
 
   useEffect(() => {
+    if (!user || !user.uid) return; // Verifica que el usuario esté disponible
+    const fetchActivities = async () => {
+      const storedActivities = await localforage.getItem('activities') || [];
+      const userActivities = storedActivities.filter(activity => activity.userId === user.uid);
+      setActivities(userActivities);
+    };
+    fetchActivities();
+  }, [user]);
+
+  useEffect(() => {
+    if (!user || !user.uid) return; // Verifica que el usuario esté disponible
+
     if (!loading && !error && servicios && servicios.length > 0) {
       const userServicio = servicios.find(servicio => servicio.user === user.uid); // Filtrar servicio del usuario actual
       if (userServicio) {
@@ -97,29 +87,39 @@ const ServicioDashboard = () => {
           tutorAcademico,
           tutorComunitario,
           hour,
-          estatus: status || 'Pendiente' // Asegurarse de que el estatus tenga un valor inicial
         });
       }
     }
-  }, [loading, error, servicios, user.uid]);
+  }, [loading, error, servicios, user.uid, user]);
 
   useEffect(() => {
+    if (!user || !user.uid) return; // Verifica que el usuario esté disponible
+
     const newTotalHours = activities.reduce((total, activity) => total + (+activity.hours), 0);
     setTotalHours(newTotalHours);
-    if (newTotalHours >= 120) {
-      setCanDownloadCarta(true);
-      setStudent(prevStudent => ({
-        ...prevStudent,
-        estatus: 'Completado'
-      }));
-    } else {
-      setCanDownloadCarta(false);
-    }
-  }, [activities]);
+    const currentEstatus = newTotalHours >= horasCumplir ? 'Completado' : estatus.estatus;
+    setCanDownloadCarta(newTotalHours >= horasCumplir);
+    setStudent(prevStudent => ({
+      ...prevStudent,
+      estatus: currentEstatus
+    }));
+    // Guardar actividades en el localStorage, filtradas por el ID del usuario
+    const userActivities = activities.map(activity => ({
+      ...activity,
+      userId: user.uid
+    }));
+    localforage.setItem('activities', userActivities); // Actualizar localforage
+  }, [activities, user.uid, user]);
 
-  const handleDeleteActivity = (activityId) => {
+  const handleDeleteActivity = async (activityId) => {
     const updatedActivities = activities.filter(activity => activity.id !== activityId);
     setActivities(updatedActivities);
+    // Actualizar localforage
+    const userActivities = updatedActivities.map(activity => ({
+      ...activity,
+      userId: user.uid
+    }));
+    await localforage.setItem('activities', userActivities);
   };
 
   const handleEditActivity = (activityId) => {
@@ -142,15 +142,21 @@ const ServicioDashboard = () => {
     setOpenEditModal(false);
   };
 
-  const handleAddActivity = (newActivity) => {
+  const handleAddActivity = async (newActivity) => {
     if (student.estatus !== 'Completado') {
-      const updatedActivities = [...activities, newActivity];
+      const updatedActivities = [...activities, { ...newActivity, userId: user.uid }];  // Añadir userId a la nueva actividad
       setActivities(updatedActivities);
       setOpenModal(false);
+      // Actualizar localforage
+      const userActivities = updatedActivities.map(activity => ({
+        ...activity,
+        userId: user.uid
+      }));
+      await localforage.setItem('activities', userActivities);
     }
   };
 
-  const handleEditActivitySubmit = (editedActivity) => {
+  const handleEditActivitySubmit = async (editedActivity) => {
     const updatedActivities = activities.map(activity => {
       if (activity.id === editedActivity.id) {
         return editedActivity;
@@ -160,12 +166,18 @@ const ServicioDashboard = () => {
     });
     setActivities(updatedActivities);
     setOpenEditModal(false);
+    // Actualizar localforage
+    const userActivities = updatedActivities.map(activity => ({
+      ...activity,
+      userId: user.uid
+    }));
+    await localforage.setItem('activities', userActivities);
   };
 
   const handlePreviewPDF = async () => {
     try {
       const qrCodeDataUrl = await generateQRCode(`Nombre: ${user.name} ${user.lastName}\nCI: ${user.CI}\nTotal Horas: ${totalHours}`);
-      const pdfBytes = await createPDF(user, qrCodeDataUrl);
+      const pdfBytes = await createPDF(user, student, qrCodeDataUrl);
       if (pdfBytes instanceof Blob) {
         // Implementar lógica para previsualizar el PDF si es necesario
       } else {
@@ -179,11 +191,14 @@ const ServicioDashboard = () => {
   const handleDownloadActa = async () => {
     try {
       const qrCodeDataUrl = await generateQRCode(`Nombre: ${user.name} ${user.lastName}\nCI: ${user.CI}\nTotal Horas: ${totalHours}`);
-      ActaPDF(user, qrCodeDataUrl);
+      ActaPDF(user, student, qrCodeDataUrl);
     } catch (error) {
       console.error('Error generating Acta PDF:', error);
     }
   };
+
+  // Cambiado a estatus constante
+  const currentEstatus = totalHours >= horasCumplir ? 'Completado' : estatus.estatus;
 
   return (
     <PageTemplate>
@@ -217,7 +232,7 @@ const ServicioDashboard = () => {
                 <Typography variant="h6" gutterBottom>Horas</Typography>
                 <TitleValue title="Horas a Cumplir" value={horasCumplir} />
                 <TitleValue title="Total Acumulado" value={totalHours} />
-                <TitleValue title="Estatus" value={student.estatus} />
+                <TitleValue title="Estatus" value={currentEstatus} />
               </CustomBox>
             </Grid>
           </Grid>
@@ -246,6 +261,7 @@ const ServicioDashboard = () => {
               Descargar acta de conclusión
             </Button>
           </div>
+
         </Grid>
       </Grid>
 
@@ -265,7 +281,7 @@ const ServicioDashboard = () => {
           color="primary"
           startIcon={<AddIcon />}
           onClick={handleOpenModal}
-          disabled={student.estatus === 'Completado' || canDownloadCarta}
+          disabled={currentEstatus === 'Completado' || canDownloadCarta}
         >
           Agregar nueva actividad
         </Button>
@@ -298,7 +314,7 @@ const ServicioDashboard = () => {
                     onDelete={() => handleDeleteActivity(activity.id)}
                     onEdit={() => handleEditActivity(activity.id)}
                     canDownload={canDownloadCarta}
-                    studentStatus={student.estatus}
+                    studentStatus={currentEstatus}
                   />
                 </TableCell>
               </TableRow>
@@ -308,9 +324,18 @@ const ServicioDashboard = () => {
       </TableStyled>
 
       <br />
-
     </PageTemplate>
   );
 };
 
 export default withAuth(ServicioDashboard, ['User']);
+
+
+
+
+
+
+
+
+
+

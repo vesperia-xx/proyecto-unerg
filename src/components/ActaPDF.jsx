@@ -44,7 +44,7 @@ const getSemesterPeriod = (startDate, endDate) => {
     }
 };
 
-export const ActaPDF = (user, qrCodeImageUrl) => {
+export const ActaPDF = (user, student, qrCodeImageUrl) => {
     const doc = new jsPDF({
         orientation: 'portrait',
         unit: 'cm',
@@ -57,11 +57,8 @@ export const ActaPDF = (user, qrCodeImageUrl) => {
 
     // Datos del estudiante
     const studentData = {
-        projectTitle: 'proyecto bigchungo',
-        foundation: 'FUPAGUA',
-        academicTutor: 'Prof.ª Liliana Alcalá',
         startDate: new Date(2024, 1, 14),
-        endDate: new Date(2024, 7, 30)
+        endDate: new Date(2024, 7, 7)
     };
 
     const margin = 2.5;
@@ -94,13 +91,13 @@ export const ActaPDF = (user, qrCodeImageUrl) => {
             // Student data and body text
             doc.setFontSize(12);
             const semesterPeriod = getSemesterPeriod(studentData.startDate, studentData.endDate);
-            const bodyText = `Hoy, a los ${today.getDate()} días del mes de ${getMonthName(today.getMonth())} del año ${today.getFullYear()}, los miembros de la Comunidad Universitaria y Comunidad Beneficiaria involucrados en la ejecución del “${studentData.projectTitle}”, desarrollado en la fundación ${studentData.foundation}, ubicado en la Parroquia San Juan de los Morros, del Municipio Juan Germán Roscio del Estado Guárico, en acto público de reflexión, y acompañando a la Bachiller: ${user.name} ${user.lastName}. C.I.: ${user.CI}, adscrito al Proyecto antes mencionado, damos fe de: “haber cumplido plena y satisfactoriamente las 120 horas mínimas de la prestación del Servicio Comunitario de conformidad con la Ley de Servicio Comunitario del Estudiante de Educación Superior, y demás reglamentos que regulan la materia en nuestra Casa de Estudios, en el periodo del ${semesterPeriod} desde ${studentData.startDate.getDate()} de ${getMonthName(studentData.startDate.getMonth())} de ${studentData.startDate.getFullYear()} hasta ${studentData.endDate.getDate()} de ${getMonthName(studentData.endDate.getMonth())} de ${studentData.endDate.getFullYear()}”. Para los efectos legales pertinentes, y en constancia de lo antes expuesto, firman.`;
+            const bodyText = `Hoy, a los ${today.getDate()} días del mes de ${getMonthName(today.getMonth())} del año ${today.getFullYear()}, los miembros de la Comunidad Universitaria y Comunidad Beneficiaria involucrados en la ejecución del “${student.title}”, desarrollado en la fundación ${student.empresa}, ubicado en la Parroquia San Juan de los Morros, del Municipio Juan Germán Roscio del Estado Guárico, en acto público de reflexión, y acompañando a la Bachiller: ${user.name} ${user.lastName}. C.I.: ${user.CI}, adscrito al Proyecto antes mencionado, damos fe de: “haber cumplido plena y satisfactoriamente las 120 horas mínimas de la prestación del Servicio Comunitario de conformidad con la Ley de Servicio Comunitario del Estudiante de Educación Superior, y demás reglamentos que regulan la materia en nuestra Casa de Estudios, en el periodo del ${semesterPeriod} desde ${studentData.startDate.getDate()} de ${getMonthName(studentData.startDate.getMonth())} de ${studentData.startDate.getFullYear()} hasta ${studentData.endDate.getDate()} de ${getMonthName(studentData.endDate.getMonth())} de ${studentData.endDate.getFullYear()}”. Para los efectos legales pertinentes, y en constancia de lo antes expuesto, firman.`;
             doc.text(bodyText, margin, 6.5 + margin, { maxWidth: 21 - 2 * margin, align: 'justify' });
 
             // Additional text
-            const additionalText1 = `Tutor (a) Académico (a): ${studentData.academicTutor} V-16.804.257`;
+            const additionalText1 = `Tutor (a) Académico (a): ${student.tutorAcademico} V-16.804.257`;
             const additionalText2 = `FIRMA: ______________________`;
-            const additionalText3 = `Tutor (a) Comunitario (a): Melisa Caridad Farfán Guevara V-18.971.998`;
+            const additionalText3 = `Tutor (a) Comunitario (a): ${student.tutorComunitario} V-18.971.998`;
             const additionalText4 = `FIRMA: ______________________`;
             const additionalText5 = `SELLO INSTITUCIONAL`;
             const additionalText6 = `Estudiante: ${user.name} ${user.lastName} V-${user.CI}`;
