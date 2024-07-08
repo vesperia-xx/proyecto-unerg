@@ -16,8 +16,6 @@ import { useAuthStore } from "@/hooks/useAuthStore";
 
 import withAuth from "@/helpers/withAuth";
 
-// Importar aquí la lógica para interactuar con la tabla InscriptionRequest según tu entorno y herramientas (por ejemplo, Axios, GraphQL, etc.)
-
 const links = [
     { text: 'Estudiantes', icon: <PeopleAltIcon />, route: RouterLinks.admin.servicio.ServicioEstudiantes },
     { text: 'Salir', icon: <LogoutIcon />, route: "/" },
@@ -35,24 +33,24 @@ const ServicioEstudiantes = () => {
             type: 'Servicio',
             isAccepted: false
         },
-        // Más solicitudes de muestra pueden agregarse aquí
     ]);
 
     const studentData = {
-        name: 'nico',
-        lastname: 'sterling',
-        ci: '13133033',
+        id: 1,
+        name: 'Maria',
+        lastname: 'Diaz',
+        ci: '30318748',
         phoneNumber: '04140416579',
-        email: 'maria@email',
+        email: 'maria@gmail.com'
     };
 
     const studentServicio = {
-        title: 'proyecto bigchungo',
+        title: 'Proyecto',
         empresa: 'FUPAGUA',
-        tutorAcademico: 'Adriana Roa',
-        tutorComunitario: 'Melissa Farfan',
+        tutorPasantias: 'Adriana Roa',
+        tutorEmpresarial: 'Melissa Farfan',
         hour: 0,
-        estatus: 'Pendiente'
+        status: 'Completado'
     };
 
     const handleContextMenu = (event, id) => {
@@ -66,16 +64,12 @@ const ServicioEstudiantes = () => {
     };
 
     const acceptRequest = () => {
-        // Lógica para marcar la solicitud como aceptada en la tabla InscriptionRequest
-        // Actualizar el estado según sea necesario
         handleCloseMenu();
         alert('Ha aceptado al alumno.');
     };
 
     const rejectRequest = () => {
-        // Filtrar las solicitudes para mantener solo aquellas cuyo ID no coincida con el ID de la solicitud seleccionada
         const updatedRequests = inscriptionRequests.filter(request => request._id !== selectedRequestId);
-        // Actualizar el estado con las solicitudes filtradas
         setInscriptionRequests(updatedRequests);
         handleCloseMenu();
         alert('Ha rechazado al alumno.');
