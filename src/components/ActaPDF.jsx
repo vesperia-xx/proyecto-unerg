@@ -95,9 +95,9 @@ export const ActaPDF = (user, student, qrCodeImageUrl) => {
             doc.text(bodyText, margin, 6.5 + margin, { maxWidth: 21 - 2 * margin, align: 'justify' });
 
             // Additional text
-            const additionalText1 = `Tutor (a) Académico (a): ${student.tutorAcademico} V-16.804.257`;
+            const additionalText1 = `Tutor (a) Académico (a): ${student.tutorAcademico}`;
             const additionalText2 = `FIRMA: ______________________`;
-            const additionalText3 = `Tutor (a) Comunitario (a): ${student.tutorComunitario} V-18.971.998`;
+            const additionalText3 = `Tutor (a) Comunitario (a): ${student.tutorComunitario}`;
             const additionalText4 = `FIRMA: ______________________`;
             const additionalText5 = `SELLO INSTITUCIONAL`;
             const additionalText6 = `Estudiante: ${user.name} ${user.lastName} V-${user.CI}`;

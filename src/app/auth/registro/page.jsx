@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { createTheme, ThemeProvider, Button, CssBaseline, TextField, Link, Grid, Box, Typography, Container } from '@mui/material';
 import Image from 'next/image';
 import { useAuthStore } from '@/hooks/useAuthStore';
@@ -21,20 +21,54 @@ const registerFormFields = {
 }
 
 export default function SignUp() {
-
-  const { startRegister } = useAuthStore()
+  const { startRegister } = useAuthStore();
   const { email, lastName, name, CI, phoneNumber, password, image, onInputChange } = useForm(registerFormFields);
+  const [errors, setErrors] = useState({});
 
   async function handleSubmit(event) {
     event.preventDefault();
 
-    // Verifica que todos los campos requeridos estén completos
-    if (!name || !lastName || !CI || !phoneNumber || !email || !password) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Campos Incompletos',
-        text: 'Por favor, completa todos los campos antes de registrarte.',
-      });
+    // Validación del formulario
+    const validationErrors = {};
+
+    if (!name) {
+      validationErrors.name = 'El nombre es obligatorio';
+    } else if (!/^[a-zA-Z\s]+$/.test(name)) {
+      validationErrors.name = 'El nombre solo debe contener letras';
+    }
+
+    if (!lastName) {
+      validationErrors.lastName = 'El apellido es obligatorio';
+    } else if (!/^[a-zA-Z\s]+$/.test(lastName)) {
+      validationErrors.lastName = 'El apellido solo debe contener letras';
+    }
+
+    if (!CI) {
+      validationErrors.CI = 'La cédula es obligatoria';
+    } else if (!/^\d+$/.test(CI)) {
+      validationErrors.CI = 'El CI debe ser un número';
+    }
+
+    if (!phoneNumber) {
+      validationErrors.phoneNumber = 'El número de teléfono es obligatorio';
+    } else if (!/^\d{11}$/.test(phoneNumber)) {
+      validationErrors.phoneNumber = 'El número de teléfono debe tener 11 dígitos';
+    }
+
+    if (!email) {
+      validationErrors.email = 'El email es obligatorio';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      validationErrors.email = 'El email no es válido';
+    }
+
+    if (!password) {
+      validationErrors.password = 'La contraseña es obligatoria';
+    } else if (password.length < 6) {
+      validationErrors.password = 'La contraseña debe tener al menos 6 caracteres';
+    }
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
       return;
     }
 
@@ -82,6 +116,8 @@ export default function SignUp() {
                   label="Nombres"
                   onChange={onInputChange}
                   autoFocus
+                  error={!!errors.name}
+                  helperText={errors.name}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
@@ -93,6 +129,8 @@ export default function SignUp() {
                   name="lastName"
                   onChange={onInputChange}
                   autoComplete="family-name"
+                  error={!!errors.lastName}
+                  helperText={errors.lastName}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -103,6 +141,8 @@ export default function SignUp() {
                   label="Cédula"
                   name="CI"
                   onChange={onInputChange}
+                  error={!!errors.CI}
+                  helperText={errors.CI}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -116,6 +156,8 @@ export default function SignUp() {
                   InputProps={{
                     inputProps: { pattern: '[0-9]*' },
                   }}
+                  error={!!errors.phoneNumber}
+                  helperText={errors.phoneNumber}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -126,6 +168,8 @@ export default function SignUp() {
                   label="Correo Electrónico"
                   name="email"
                   onChange={onInputChange}
+                  error={!!errors.email}
+                  helperText={errors.email}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -138,6 +182,8 @@ export default function SignUp() {
                   value={password}
                   onChange={onInputChange}
                   autoComplete="new-password"
+                  error={!!errors.password}
+                  helperText={errors.password}
                 />
               </Grid>
             </Grid>
@@ -159,7 +205,6 @@ export default function SignUp() {
           </Box>
         </Box>
         <br />
-
       </Container>
     </ThemeProvider>
   );

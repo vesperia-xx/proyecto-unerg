@@ -31,6 +31,7 @@ const PasantiasEstudiantes = () => {
       type: 'Pasantías',
       isAccepted: false
     },
+    // Más solicitudes de muestra pueden agregarse aquí
   ]);
 
   const studentData = {
@@ -139,3 +140,5 @@ const PasantiasEstudiantes = () => {
 };
 
 export default withAuth(PasantiasEstudiantes, ['AdminPasantias']);
+
+

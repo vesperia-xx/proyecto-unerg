@@ -47,10 +47,10 @@ const ServicioEstudiantes = () => {
     const studentServicio = {
         title: 'Proyecto',
         empresa: 'FUPAGUA',
-        tutorPasantias: 'Adriana Roa',
-        tutorEmpresarial: 'Melissa Farfan',
+        tutorAcademico: 'Adriana Roa',
+        tutorComunitario: 'Melissa Farfan',
         hour: 0,
-        status: 'Completado'
+        estatus: 'Completado'
     };
 
     const handleContextMenu = (event, id) => {

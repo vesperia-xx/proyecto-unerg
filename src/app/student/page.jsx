@@ -6,7 +6,6 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
-import { useAuthStore } from "@/hooks/useAuthStore";
 import Sidebar from "@/components/Sidebar";
 import ServiceModal from "@/components/ServiceModal";
 import PageTemplate from "@/components/PageTemplate";
@@ -15,10 +14,12 @@ import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Swal from "sweetalert2";
 import withAuth from "@/helpers/withAuth";
-import { usePasantiasStore } from "@/hooks/usePasantiasStore";
-import PasantiasModal from "@/components/PasantiasModal ";
 
-// Definición de enlaces para la barra lateral
+import { usePasantiasStore } from "@/hooks/usePasantiasStore";
+import { useAuthStore } from "@/hooks/useAuthStore";
+import PasantiasModal from "@/components/PasantiasModal ";
+import { useServicioStore } from "@/hooks/useServicioStore";
+
 const links = [
     { text: 'Mi perfil', icon: <PersonIcon />, route: RouterLinks.student.StudentDashboard },
     { text: 'Salir', icon: <LogoutIcon />, route: "/" },
@@ -26,8 +27,8 @@ const links = [
 
 const DashboardStudent = () => {
     const { user, startLogout } = useAuthStore();
-    const { getPasantias, pasantias, getServicio, servicio } = usePasantiasStore();  // Añadido `servicio` para comprobar datos del servicio
-
+    const {getPasantias, pasantias} = usePasantiasStore();  
+    const {getServicio, servicio} = useServicioStore();
     const [isServiceRegistered, setIsServiceRegistered] = useState(false);
     const [isPasantiasRegistered, setIsPasantiasRegistered] = useState(false);
     const [openServiceModal, setOpenServiceModal] = useState(false);
@@ -157,12 +158,10 @@ const DashboardStudent = () => {
                 open={openPasantiasModal}
                 onClose={handleClosePasantiasModal}
                 onRegister={handlePasantiasRegistered}
+                onError={handleFailedRegistration}
             />
         </PageTemplate>
     );
 };
 
 export default withAuth(DashboardStudent, ['User']);
-
-
-
