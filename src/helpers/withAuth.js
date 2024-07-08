@@ -13,7 +13,7 @@ const withAuth = (WrappedComponent, allowedRoles) => {
           window.location.href = '/no-access'; // Redirigir a una página de acceso denegado 
         } 
       } else if (status === 'not-authenticated') { 
-        window.location.href = '/login'; // Redirigir a la página de login si no está autenticado 
+        window.location.href = '/'; // Redirigir a la página de login si no está autenticado 
       } 
     }, [status, user]); 
  
