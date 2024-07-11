@@ -24,7 +24,7 @@ import { useAuthStore } from "@/hooks/useAuthStore";
 import { useServicioStore } from "@/hooks/useServicioStore";
 import withAuth from "@/helpers/withAuth";
 
-import localforage from 'localforage'; // Importa localforage
+import localforage from 'localforage'; 
 
 const links = [
   { text: 'Seguimiento', icon: <DashboardIcon />, route: RouterLinks.student.servicio.ServicioDashboard },
@@ -40,7 +40,7 @@ const estatus = {
 
 const ServicioDashboard = () => {
   const { user } = useAuthStore();
-  const [activities, setActivities] = useState([]);  // Inicializar con un array vacío
+  const [activities, setActivities] = useState([]);  
   const [student, setStudent] = useState({
     title: '',
     empresa: '',
@@ -60,12 +60,12 @@ const ServicioDashboard = () => {
   const { loading, error, servicios, getServicios } = useServicioStore();
 
   useEffect(() => {
-    if (!user || !user.uid) return; // Asegúrate de que user esté definido
+    if (!user || !user.uid) return; 
     getServicios();
   }, [getServicios, user]);
 
   useEffect(() => {
-    if (!user || !user.uid) return; // Verifica que el usuario esté disponible
+    if (!user || !user.uid) return; 
     const fetchActivities = async () => {
       const storedActivities = await localforage.getItem('activities') || [];
       const userActivities = storedActivities.filter(activity => activity.userId === user.uid);
@@ -75,10 +75,9 @@ const ServicioDashboard = () => {
   }, [user]);
 
   useEffect(() => {
-    if (!user || !user.uid) return; // Verifica que el usuario esté disponible
-
+    if (!user || !user.uid) return; 
     if (!loading && !error && servicios && servicios.length > 0) {
-      const userServicio = servicios.find(servicio => servicio.user === user.uid); // Filtrar servicio del usuario actual
+      const userServicio = servicios.find(servicio => servicio.user === user.uid); 
       if (userServicio) {
         const { title, empresa, tutorAcademico, tutorComunitario, hour, status } = userServicio;
         setStudent({
@@ -93,7 +92,7 @@ const ServicioDashboard = () => {
   }, [loading, error, servicios, user.uid, user]);
 
   useEffect(() => {
-    if (!user || !user.uid) return; // Verifica que el usuario esté disponible
+    if (!user || !user.uid) return; 
 
     const newTotalHours = activities.reduce((total, activity) => total + (+activity.hours), 0);
     setTotalHours(newTotalHours);
@@ -103,12 +102,11 @@ const ServicioDashboard = () => {
       ...prevStudent,
       estatus: currentEstatus
     }));
-    // Guardar actividades en el localStorage, filtradas por el ID del usuario
     const userActivities = activities.map(activity => ({
       ...activity,
       userId: user.uid
     }));
-    localforage.setItem('activities', userActivities); // Actualizar localforage
+    localforage.setItem('activities', userActivities); 
   }, [activities, user.uid, user]);
 
   const handleDeleteActivity = async (activityId) => {
@@ -144,10 +142,9 @@ const ServicioDashboard = () => {
 
   const handleAddActivity = async (newActivity) => {
     if (student.estatus !== 'Completado') {
-      const updatedActivities = [...activities, { ...newActivity, userId: user.uid }];  // Añadir userId a la nueva actividad
+      const updatedActivities = [...activities, { ...newActivity, userId: user.uid }]; 
       setActivities(updatedActivities);
       setOpenModal(false);
-      // Actualizar localforage
       const userActivities = updatedActivities.map(activity => ({
         ...activity,
         userId: user.uid
@@ -166,7 +163,6 @@ const ServicioDashboard = () => {
     });
     setActivities(updatedActivities);
     setOpenEditModal(false);
-    // Actualizar localforage
     const userActivities = updatedActivities.map(activity => ({
       ...activity,
       userId: user.uid
@@ -179,7 +175,6 @@ const ServicioDashboard = () => {
       const qrCodeDataUrl = await generateQRCode(`Nombre: ${user.name} ${user.lastName}\nCI: ${user.CI}\nTotal Horas: ${totalHours}`);
       const pdfBytes = await createPDF(user, student, qrCodeDataUrl);
       if (pdfBytes instanceof Blob) {
-        // Implementar lógica para previsualizar el PDF si es necesario
       } else {
         console.error('Error: PDF creation returned invalid data.');
       }
@@ -197,7 +192,6 @@ const ServicioDashboard = () => {
     }
   };
 
-  // Cambiado a estatus constante
   const currentEstatus = totalHours >= horasCumplir ? 'Completado' : estatus.estatus;
 
   return (

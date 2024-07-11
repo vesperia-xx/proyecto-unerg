@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Menu, MenuItem, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 import { MoreVert as MoreVertIcon } from '@mui/icons-material';
 
@@ -13,6 +13,7 @@ import RouterLinks from "@/routes/RouterLinks";
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useAuthStore } from "@/hooks/useAuthStore";
+import { usePasantiasStore } from "@/hooks/usePasantiasStore";
 
 import withAuth from "@/helpers/withAuth";
 
@@ -24,33 +25,13 @@ const links = [
 const PasantiasEstudiantes = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedRequestId, setSelectedRequestId] = useState(null);
-  const [inscriptionRequests, setInscriptionRequests] = useState([
-    {
-      _id: '1',
-      studentData_id: '2',
-      type: 'Pasantías',
-      isAccepted: false
-    },
-    // Más solicitudes de muestra pueden agregarse aquí
-  ]);
 
-  const studentData = {
-    id: 1,
-    name: 'Maria',
-    lastname: 'Diaz',
-    ci: '30318748',
-    phoneNumber: '04140416579',
-    email: 'maria@gmail.com'
-  };
+  const { user } = useAuthStore();
+  const { loading, pasantias, getPasantias, acceptRequest, rejectRequest } = usePasantiasStore();
 
-  const pasantiasData = {
-    title: 'Proyecto',
-    empresa: 'FUPAGUA',
-    tutorPasantias: 'Adriana Roa',
-    tutorEmpresarial: 'Melissa Farfan',
-    hour: 0,
-    status: 'Completado'
-  };
+  useEffect(() => {
+    getPasantias();
+  }, );
 
   const handleContextMenu = (event, id) => {
     event.preventDefault();
@@ -62,25 +43,15 @@ const PasantiasEstudiantes = () => {
     setAnchorEl(null);
   };
 
-  const acceptRequest = () => {
-    setInscriptionRequests(prevRequests =>
-      prevRequests.map(request =>
-        request._id === selectedRequestId ? { ...request, isAccepted: true } : request
-      )
-    );
+  const handleAcceptRequest = () => {
+    acceptRequest(selectedRequestId);
     handleCloseMenu();
-    alert('Ha aceptado al alumno.');
   };
 
-  const rejectRequest = () => {
-    setInscriptionRequests(prevRequests =>
-      prevRequests.filter(request => request._id !== selectedRequestId)
-    );
+  const handleRejectRequest = () => {
+    rejectRequest(selectedRequestId);
     handleCloseMenu();
-    alert('Ha rechazado al alumno.');
   };
-
-  const { user } = useAuthStore();
 
   return (
     <PageTemplate>
@@ -108,17 +79,17 @@ const PasantiasEstudiantes = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {inscriptionRequests.map((request, index) => (
+            {pasantias.map((request, index) => (
               <TableRow key={request._id}>
                 <TableCell>{index + 1}</TableCell>
-                <TableCell>{`${studentData.name} ${studentData.lastname}`}</TableCell>
-                <TableCell>{studentData.ci}</TableCell>
-                <TableCell>{studentData.phoneNumber}</TableCell>
-                <TableCell>{pasantiasData.title}</TableCell>
-                <TableCell>{pasantiasData.empresa}</TableCell>
-                <TableCell>{pasantiasData.tutorPasantias}</TableCell>
-                <TableCell>{pasantiasData.tutorEmpresarial}</TableCell>
-                <TableCell>{pasantiasData.status}</TableCell>
+                <TableCell>{`${request.user.name} ${request.user.lastname}`}</TableCell>
+                <TableCell>{request.user.CI}</TableCell>
+                <TableCell>{request.user.phoneNumber}</TableCell>
+                <TableCell>{request.title}</TableCell>
+                <TableCell>{request.empresa}</TableCell>
+                <TableCell>{request.tutorAcademico}</TableCell>
+                <TableCell>{request.tutorEmpresarial}</TableCell>
+                <TableCell>{request.status}</TableCell>
                 <TableCell onContextMenu={(e) => handleContextMenu(e, request._id)}>
                   <MoreVertIcon />
                   <Menu
@@ -126,8 +97,8 @@ const PasantiasEstudiantes = () => {
                     open={Boolean(anchorEl) && selectedRequestId === request._id}
                     onClose={handleCloseMenu}
                   >
-                    <MenuItem onClick={acceptRequest} style={{ color: '#4079ED' }}>Aceptar</MenuItem>
-                    <MenuItem onClick={rejectRequest} style={{ color: '#EB5757' }}>Rechazar</MenuItem>
+                    <MenuItem onClick={handleAcceptRequest} style={{ color: '#4079ED' }}>Aceptar</MenuItem>
+                    <MenuItem onClick={handleRejectRequest} style={{ color: '#EB5757' }}>Rechazar</MenuItem>
                   </Menu>
                 </TableCell>
               </TableRow>
@@ -140,5 +111,3 @@ const PasantiasEstudiantes = () => {
 };
 
 export default withAuth(PasantiasEstudiantes, ['AdminPasantias']);
-
-

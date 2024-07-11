@@ -21,7 +21,6 @@ const TableStyled = ({ title, hover = false, children }) => {
           py: 0.8,
           color: "#444A6D",
         },
-        // barra de desplazamiento
         ".MuiTableContainer-root": {
           overflow: "auto",
           maxHeight: "400px",

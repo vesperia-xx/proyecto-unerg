@@ -30,7 +30,7 @@ const Sidebar = ({ title, links, profileImage, profileName }) => {
   const handleListItemClick = (index) => {
     setSelectedIndex(index);
     if (mobileOpen) {
-      setMobileOpen(false); // Cerrar el menú lateral en dispositivos móviles
+      setMobileOpen(false); 
     }
   };
 
@@ -65,12 +65,12 @@ const Sidebar = ({ title, links, profileImage, profileName }) => {
             onClick={() => {
               handleListItemClick(index);
               if (link.text === 'Salir') {
-                handleLogout(); // Llama a la función handleLogout al hacer clic en Salir
+                handleLogout(); 
               }
             }}
-            sx={{ color: selectedIndex === index ? '#4079ED' : '#737791', textDecoration: 'none' }} // Cambiar color seleccionado a azul
+            sx={{ color: selectedIndex === index ? '#4079ED' : '#737791', textDecoration: 'none' }} 
           >
-            <ListItemIcon sx={{ color: selectedIndex === index ? '#4079ED' : '#737791' }}> {/* Cambiar color de iconos a blanco */}
+            <ListItemIcon sx={{ color: selectedIndex === index ? '#4079ED' : '#737791' }}> {}
               {link.icon}
             </ListItemIcon>
             <ListItemText

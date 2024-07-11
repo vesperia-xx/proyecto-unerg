@@ -23,7 +23,7 @@ import { useAuthStore } from "@/hooks/useAuthStore";
 import { usePasantiasStore } from "@/hooks/usePasantiasStore";
 
 import withAuth from "@/helpers/withAuth";
-import localforage from 'localforage'; // Importar localforage
+import localforage from 'localforage'; 
 
 const links = [
   { text: 'Seguimiento', icon: <DashboardIcon />, route: RouterLinks.student.pasantias.PasantiasDashboard },
@@ -38,7 +38,7 @@ const estatus = {
 }
 
 const PasantiasDashboard = () => {
-  const [activities, setActivities] = useState([]);  // Inicializar con un array vacío
+  const [activities, setActivities] = useState([]);  
   const [student, setStudent] = useState({
     title: '',
     empresa: '',
@@ -57,14 +57,14 @@ const PasantiasDashboard = () => {
   const { loading, error, pasantias, getPasantias } = usePasantiasStore();
 
   useEffect(() => {
-    if (!user || !user.uid) return; // Asegúrate de que user esté definido
+    if (!user || !user.uid) return; 
     getPasantias();
   }, [getPasantias, user]);
 
   useEffect(() => {
-    if (!user || !user.uid) return; // Verifica que el usuario esté disponible
+    if (!user || !user.uid) return; 
     const fetchActivities = async () => {
-      const storedActivities = await localforage.getItem(`activities_${user.uid}`) || [];  // Usar un ID único para cada usuario
+      const storedActivities = await localforage.getItem(`activities_${user.uid}`) || []; 
       setActivities(storedActivities);
     };
     fetchActivities();
@@ -72,7 +72,7 @@ const PasantiasDashboard = () => {
 
   useEffect(() => {
     if (!loading && !error && pasantias && pasantias.length > 0) {
-      const userPasantia = pasantias.find(pasantia => pasantia.user === user.uid); // Filtrar pasantía del usuario actual
+      const userPasantia = pasantias.find(pasantia => pasantia.user === user.uid); 
       if (userPasantia) {
         const { title, empresa, tutorAcademico, tutorEmpresarial, hour } = userPasantia;
         setStudent({
@@ -81,7 +81,7 @@ const PasantiasDashboard = () => {
           tutorAcademico,
           tutorEmpresarial,
           hour,
-          estatus: hour >= horasCumplir ? 'Completado' : estatus.estatus // Actualizar estatus según las horas
+          estatus: hour >= horasCumplir ? 'Completado' : estatus.estatus 
         });
       }
     }
@@ -92,9 +92,8 @@ const PasantiasDashboard = () => {
     setTotalHours(newTotalHours);
     setCanDownload(newTotalHours >= horasCumplir);
 
-    // Guardar actividades en localforage, filtradas por el ID del usuario
     const saveActivities = async () => {
-      await localforage.setItem(`activities_${user.uid}`, activities); // Actualizar localforage
+      await localforage.setItem(`activities_${user.uid}`, activities); 
     };
     saveActivities();
   }, [activities, user.uid]);
@@ -131,7 +130,7 @@ const PasantiasDashboard = () => {
 
   const handleAddActivity = async (newActivity) => {
     if (currentEstatus !== 'Completado') {
-      const updatedActivities = [...activities, { ...newActivity, userId: user.uid }];  // Añadir userId a la nueva actividad
+      const updatedActivities = [...activities, { ...newActivity, userId: user.uid }];  
       setActivities(updatedActivities);
       setOpenModal(false);
       // Actualizar localforage
@@ -149,7 +148,6 @@ const PasantiasDashboard = () => {
     });
     setActivities(updatedActivities);
     setOpenEditModal(false);
-    // Actualizar localforage
     await localforage.setItem(`activities_${user.uid}`, updatedActivities);
   };
 

@@ -4,7 +4,7 @@ import { Button, Container, Typography } from '@mui/material';
 
 const NoAccess = () => {
   const handleGoBack = () => {
-    window.location.href = '/'; // Redirect to home page
+    window.location.href = '/'; 
   };
 
   return (

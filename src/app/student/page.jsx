@@ -34,18 +34,17 @@ const DashboardStudent = () => {
     const [openServiceModal, setOpenServiceModal] = useState(false);
     const [openPasantiasModal, setOpenPasantiasModal] = useState(false);
 
-    // Estado local para manejar la carga de datos
     const [dataLoaded, setDataLoaded] = useState(false);
 
     useEffect(() => {
         const checkRegistrations = async () => {
             try {
                 await getPasantias();
-                await getServicio();  // Asegúrate de llamar a `getServicio`
-                setDataLoaded(true);  // Marcar como cargado después de obtener los datos
+                await getServicio(); 
+                setDataLoaded(true);  
             } catch (error) {
                 console.error('Error fetching data:', error);
-                setDataLoaded(true);  // Asegurarse de que la carga de datos se complete
+                setDataLoaded(true);  
             }
         };
 
@@ -63,7 +62,7 @@ const DashboardStudent = () => {
     }, [dataLoaded, pasantias, user.uid]);
 
     useEffect(() => {
-        if (dataLoaded && servicio?.user === user.uid) {  // Verifica si hay datos de servicio para el usuario
+        if (dataLoaded && servicio?.user === user.uid) {  
             setIsServiceRegistered(true);
         }
     }, [dataLoaded, servicio, user.uid]);
@@ -80,8 +79,8 @@ const DashboardStudent = () => {
     };
 
     const handlePasantiasRegistered = () => {
-        setIsPasantiasRegistered(true); // Marca que las pasantías están registradas
-        handleClosePasantiasModal(); // Cierra el modal de pasantías
+        setIsPasantiasRegistered(true); 
+        handleClosePasantiasModal();
     };
 
     const handleFailedRegistration = () => {

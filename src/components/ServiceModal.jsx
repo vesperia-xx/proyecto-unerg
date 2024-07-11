@@ -53,7 +53,7 @@ const ServiceModal = ({ open, onClose, onRegister }) => {
                     if (result.isConfirmed) {
                         onRegister();
                         onResetForm();
-                        onClose(); // Cierra el modal al confirmar el registro exitoso
+                        onClose(); // 
                     }
                 });
             }, 500);

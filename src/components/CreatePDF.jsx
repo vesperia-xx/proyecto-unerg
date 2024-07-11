@@ -72,7 +72,7 @@ export const createPDF = (user, student, qrCodeImageUrl) => {
         const qrX = margin; 
         const qrY = doc.internal.pageSize.height - margin - qrHeight - 1;
 
-        // Añadir código QR
+        // QR
         doc.addImage(qrCodeImageUrl, 'PNG', qrX, qrY, qrWidth, qrHeight);
 
         // Guardar el PDF

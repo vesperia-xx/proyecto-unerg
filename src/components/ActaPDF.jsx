@@ -1,6 +1,5 @@
 import jsPDF from 'jspdf';
 
-// Function to get month name
 const getMonthName = (monthIndex) => {
     const monthNames = [
         'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
@@ -9,7 +8,6 @@ const getMonthName = (monthIndex) => {
     return monthNames[monthIndex];
 };
 
-// Function to determine semester based on date
 const getSemesterPeriod = (startDate, endDate) => {
     const startYear = startDate.getFullYear();
     const startMonth = startDate.getMonth();
@@ -17,12 +15,12 @@ const getSemesterPeriod = (startDate, endDate) => {
     const endMonth = endDate.getMonth();
 
     const getSemester = (year, month) => {
-        if (month >= 0 && month <= 4) { // January to May
+        if (month >= 0 && month <= 4) { 
             return { year, semester: 1 };
-        } else if (month >= 8 && month <= 11) { // September to December
+        } else if (month >= 8 && month <= 11) {
             return { year, semester: 2 };
         } else {
-            return { year, semester: 0 }; // Vacation months
+            return { year, semester: 0 }; 
         }
     };
 
@@ -51,7 +49,6 @@ export const ActaPDF = (user, student, qrCodeImageUrl) => {
         format: 'a4'
     });
 
-    // Get current date
     const today = new Date();
     const currentDate = `${today.getDate()} de ${getMonthName(today.getMonth())} de ${today.getFullYear()}`;
 
@@ -63,13 +60,12 @@ export const ActaPDF = (user, student, qrCodeImageUrl) => {
 
     const margin = 2.5;
 
-    // Add University Logo
     const img2 = new Image();
     img2.src = 'https://pbs.twimg.com/profile_images/1211703453736722432/gVVrcbrS_400x400.jpg';
     img2.onload = () => {
         doc.addImage(img2, 'PNG', margin, margin, 3, 3);
 
-        // Add another logo
+        // Logo
         const img1 = new Image();
         img1.src = 'https://pbs.twimg.com/profile_images/1315726857/AIS_400x400.jpg';
         img1.onload = () => {
@@ -84,17 +80,15 @@ export const ActaPDF = (user, student, qrCodeImageUrl) => {
                 { align: 'center' }
             );
 
-            // Title
+            // Titulo
             doc.setFontSize(16);
             doc.text('ACTA DE CONCLUSIÓN DEL SERVICIO COMUNITARIO', 8 + margin, 5 + margin, { align: 'center' });
 
-            // Student data and body text
             doc.setFontSize(12);
             const semesterPeriod = getSemesterPeriod(studentData.startDate, studentData.endDate);
             const bodyText = `Hoy, a los ${today.getDate()} días del mes de ${getMonthName(today.getMonth())} del año ${today.getFullYear()}, los miembros de la Comunidad Universitaria y Comunidad Beneficiaria involucrados en la ejecución del “${student.title}”, desarrollado en la fundación ${student.empresa}, ubicado en la Parroquia San Juan de los Morros, del Municipio Juan Germán Roscio del Estado Guárico, en acto público de reflexión, y acompañando a la Bachiller: ${user.name} ${user.lastName}. C.I.: ${user.CI}, adscrito al Proyecto antes mencionado, damos fe de: “haber cumplido plena y satisfactoriamente las 120 horas mínimas de la prestación del Servicio Comunitario de conformidad con la Ley de Servicio Comunitario del Estudiante de Educación Superior, y demás reglamentos que regulan la materia en nuestra Casa de Estudios, en el periodo del ${semesterPeriod} desde ${studentData.startDate.getDate()} de ${getMonthName(studentData.startDate.getMonth())} de ${studentData.startDate.getFullYear()} hasta ${studentData.endDate.getDate()} de ${getMonthName(studentData.endDate.getMonth())} de ${studentData.endDate.getFullYear()}”. Para los efectos legales pertinentes, y en constancia de lo antes expuesto, firman.`;
             doc.text(bodyText, margin, 6.5 + margin, { maxWidth: 21 - 2 * margin, align: 'justify' });
 
-            // Additional text
             const additionalText1 = `Tutor (a) Académico (a): ${student.tutorAcademico}`;
             const additionalText2 = `FIRMA: ______________________`;
             const additionalText3 = `Tutor (a) Comunitario (a): ${student.tutorComunitario}`;
@@ -104,7 +98,7 @@ export const ActaPDF = (user, student, qrCodeImageUrl) => {
             const additionalText7 = `FIRMA: ______________________`;
 
             const textYStart = doc.internal.pageSize.height - margin - 11;
-            const lineSpacing = 1; // Spacing between lines
+            const lineSpacing = 1; 
 
             doc.text(additionalText1, margin, textYStart);
             doc.text(additionalText2, margin, textYStart + lineSpacing);
@@ -114,7 +108,7 @@ export const ActaPDF = (user, student, qrCodeImageUrl) => {
             doc.text(additionalText6, margin, textYStart + 5 * lineSpacing);
             doc.text(additionalText7, margin, textYStart + 6 * lineSpacing);
 
-            // QR Code
+            // QR 
             const qrWidth = 3;
             const qrHeight = 3;
             const qrX = margin;
@@ -122,11 +116,9 @@ export const ActaPDF = (user, student, qrCodeImageUrl) => {
 
             doc.addImage(qrCodeImageUrl, 'PNG', qrX, qrY, qrWidth, qrHeight);
 
-            // Generate PDF and create a Blob URL
             const pdfBlob = doc.output('blob');
             const pdfURL = window.URL.createObjectURL(pdfBlob);
 
-            // Open the PDF in a new window
             window.open(pdfURL, '_blank');
         };
     };
